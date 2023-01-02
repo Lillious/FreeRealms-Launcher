@@ -1,0 +1,333 @@
+::-webkit-scrollbar {
+  background: transparent;
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: darkgrey;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  border-radius: 5px;
+}
+
+@font-face {
+    font-family: freerealms;
+    src: url(../fonts/freerealms.ttf);
+}
+
+body {
+    color: #fff;
+    font-family: freerealms;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    background-image: url(../img/background.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    user-select: none;
+    resize: none;
+}
+
+input {
+    outline: none;
+}
+
+button {
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    padding: 10px;
+    left: 100px;
+    right: 100px;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* titlebar */
+
+#titlebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 35px;
+    max-height: 35px;
+    background: rgba(24, 29, 84, 0.2);
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    /* Make titlebar draggable */
+    -webkit-app-region: drag;
+    user-select: none;
+}
+
+#title {
+    text-shadow: 1px 1px 2px black;
+    font-weight: bold;
+}
+
+/* Titlebar Buttons */
+
+#titlebar #icons button {
+    /* Remove the dragging ability from titlebar buttons */
+    -webkit-app-region: no-drag;
+    /* Circlular Apple-like button design */
+    padding: 10px;
+    font-size: 12px;
+    /* Button spacing */
+    margin-left: -5px;
+    outline: none;
+    font-weight: bold;
+    border: none;
+    color: #fff;
+    background: transparent;
+}
+
+#titlebar #icons {
+    /* Changes the side and order that the titlebar buttons are in */
+    position: absolute;
+    top: 0;
+    right: 0;
+    /* float: left; */
+}
+
+#titlebar #icons #close:hover {
+    background-color: rgba(255, 41, 41, 0.4);
+}
+
+#titlebar #icons #minimize:hover {
+    background: rgba(24, 29, 84, 0.4);
+}
+
+#titlebar .container #title {
+    /* Changes the side that the titlebar title is on */
+    float: left;
+    text-indent: 35px;
+    /* float: right; */
+}
+
+#version {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    font-size: 12px;
+    color: #fff;
+    padding: 10px;
+}
+
+#logo {
+    position: fixed;
+    top: 2px;
+    left: 4px;
+    width: 32px;
+    height: 32px;
+}
+/* End button coloring */
+
+/* Page Content */
+
+#content {
+    position: fixed;
+    top: 35px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: scroll;
+}
+
+.container {
+    padding: 8px;
+}
+
+/* End General Styling */
+
+.text-align-center {
+    text-align: center;
+}
+
+.text-align-left {
+    text-align: left;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.float-right {
+    float: right;
+}
+
+.float-left {
+    float: left;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+#progress-container {
+    position: fixed;
+    display: none;
+    bottom: 150px;
+    height: 25px;
+    left: 10%;
+    right: 10%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+#progress {
+    transition: 0.3s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: rgba(0, 255, 0, 0.3);
+    width: 0%;
+}
+
+#progress-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    line-height: 25px;
+    color: rgba(255, 255, 255, 1);
+    text-shadow: 1px 1px 2px black;
+}
+
+#toast {
+    position: fixed;
+    bottom: 180px;
+    left: 10%;
+    right: 10%;
+    height: 25px;
+    z-index: 1000;
+    text-align: center;
+    line-height: 25px;
+    color: rgba(255, 255, 255, 1);
+    text-shadow: 1px 1px 2px black;
+}
+
+#control-buttons {
+    /* center buttons at the bottom */
+    position: fixed;
+    bottom: 75px;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+#control-buttons button {
+    transition: 0.3s;
+    padding: 10px;
+    width: 100px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+}
+
+#uninstall {
+    display: none;
+}
+
+#control-buttons #install:hover, #control-buttons #play-status:hover, #control-buttons #start-server:hover {
+    transition: 0.3s;
+    background: rgba(129, 101, 174, 0.3);
+    border: 1px solid rgba(129, 101, 174, 0.1);
+}
+
+#control-buttons #uninstall:hover {
+    transition: 0.3s;
+    background: rgba(220, 118, 130, 0.4);
+    border: 1px solid rgba(220, 118, 130, 0.1);
+}
+
+#control-buttons #play-status:disabled, #control-buttons #install:disabled, #control-buttons #uninstall:disabled, #control-buttons #start-server:disabled {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+#control-buttons #play-status:disabled:hover, #control-buttons #install:disabled:hover, #control-buttons #uninstall:disabled:hover, #control-buttons #start-server:disabled:hover {
+    cursor: not-allowed;
+}
+
+#hero-image {
+    overflow: hidden;
+}
+
+.notification-bar {
+    position: fixed;
+    /* display: none; */
+    right: 25px;
+    top: 55px;
+    background: rgba(0, 0, 0, 0.2);
+    border-right: 4px solid #238636;
+    height: 35px;
+}
+
+.notification-bar .notification-content {
+    color: #c7cfd7;
+    padding: 7px;
+    margin-right: 25px;
+    margin-left: 5px;
+}
+
+.notification-bar .notification-close {
+    color: #c7cfd7;
+    position: absolute;
+    padding: 8px;
+    right: 5px;
+    user-select: none;
+}
+
+.notification-bar .notification-close:hover {
+    color: #ed6a5e;
+    cursor: pointer;
+}
+
+#playerinput {
+    position: fixed;
+    bottom: 75px;
+    left: 15px;
+}
+
+#playerinput input {
+    width: 100px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+}
+
+#playerinput input:focus {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#playerinput input:disabled {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    color: rgba(255, 255, 255, 0.5);
+    user-select: none;
+}
+
+#playerinput input:disabled:hover {
+    cursor: not-allowed;
+    user-select: none;
+}
+
+/* End General Styling */

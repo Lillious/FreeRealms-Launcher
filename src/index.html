@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title></title>
+    <!-- Preload Javascript -->
+    <link rel='preload' href='./www/js/script.js' as='script'>
+    <script defer src='./www/js/script.js'></script>
+
+    <!-- Preload CSS -->
+    <link rel='preload' href='./www/css/style.css' as='style'>
+    <link rel='stylesheet' href='./www/css/style.css'>
+</head>
+    <!-- Assign the 'dark' class to any element to apply a dark mode style to it -->
+    <!-- Assign the 'light' class to any element to apply a light mode style to it -->
+<body>
+    <div id='titlebar'>
+        <div class='container'>
+            <img src="./www/img/logo.png" draggable="false" id="logo" alt="OSFR Logo"/>
+            <div id='title'>Free Realms Launcher</div>
+            <div id='icons'>
+                <button type='button' id='minimize'>🗕</button>
+                <button type='button' id='close'>🗙</button>
+            </div>
+        </div>
+    </div>
+    <!-- Page Content -->
+    <div id='content'>
+        <div class='container'>
+            <div id="hero-image">
+                <img src="./www/img/hero.png" draggable="false" alt="Free Realms Hero Image"/>
+            </div>
+            <div id="control-buttons">
+                <button id="uninstall">Uninstall</button>
+                <button id="install">Install</button>
+                <button id="start-server">Start Server</button>
+                <button id="play-status">Play</button>
+            </div>
+            <div id="playerinput">
+                <input type="text" autocomplete="false" spellcheck="false" id="firstname" placeholder="First Name">
+                <input type="text" autocomplete="false" spellcheck="false" id="lastname" placeholder="Last Name">
+            </div>
+            <div id="progress-container">
+                <div id="toast"></div>
+                <div id="progress">
+                    <div id="progress-text">50%</div>
+                </div>
+            </div>
+            <div id="version">Version: 1.0.0</div>
+            <footer>
+                OSFR is in no way affiliated with Daybreak Game Company LLC, and claims no rights to Free Realms in any way.
+Free Realms is the intellectual property of Daybreak Game Company LLC. No copyright infringement is intended.
+            </footer>
+        </div>
+    </div>
+</body>
+</html>
