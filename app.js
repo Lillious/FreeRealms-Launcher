@@ -27,7 +27,8 @@ const charset = () => {
 const uuid = [];
 
 generateGUID = () => {
-  for (let i = 0; i < 19; i++){
+    uuid.push('1');
+  for (let i = 0; i < 18; i++){
     const part1 = crypto.randomBytes(256).readUInt32BE()%charset().length;
     uuid.push(charset()[part1]);
   }
