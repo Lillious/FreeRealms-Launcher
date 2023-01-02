@@ -51,9 +51,9 @@ if (configJson.GUID === "") {
 
 const createWindow = () => {
     const win = new BrowserWindow({
-        width: 925,
-        minWidth: 925,
-        maxWidth: 925,
+        width: 1000,
+        minWidth: 1000,
+        maxWidth: 1000,
         height: 750,
         minHeight: 750,
         maxHeight: 750,
