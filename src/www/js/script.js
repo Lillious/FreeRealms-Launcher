@@ -81,7 +81,7 @@ if (!fs.existsSync(path.join(__dirname, '../Server/', 'OSFRServer.exe')) || !fs.
     document.getElementById('lastname').disabled = false;
 }
 
-function getInstallerFile (installerfileURL,installerfilename) {
+function getInstallerFile (installerfileURL,installerfilename, name) {
     // Variable to save downloading progress
     var received_bytes = 0;
     var total_bytes = 0;
@@ -98,6 +98,7 @@ function getInstallerFile (installerfileURL,installerfilename) {
                     total_bytes = parseInt(data.headers['content-length']);
                 })
                 .on('data', function(chunk) {
+                    document.getElementById('toast').innerHTML = `${name} download is currently in progress...`;
                     received_bytes += chunk.length;
                     showDownloadingProgress(received_bytes, total_bytes);
                 })
@@ -137,7 +138,7 @@ document.getElementById('install').addEventListener('click', async () => {
         document.getElementById('progress').style.width = '0%';
         document.getElementById('progress-container').style.display = 'block';
 
-        getInstallerFile('https://github.com/cccfire/OpenSourceFreeRealms/releases/download/v1.2/OSFR.Server.zip', path.join(__dirname, '../', 'OSFR.Server.zip')).then(() => {
+        getInstallerFile('https://github.com/cccfire/OpenSourceFreeRealms/releases/download/v1.2/OSFR.Server.zip', path.join(__dirname, '../', 'OSFR.Server.zip'), "Server").then(() => {
             extractFiles(path.join(__dirname, '../', 'OSFR.Server.zip'), path.join(__dirname, '../')).then(() => {
                 // rename OSFR Server folder to Server
                 fs.rename(path.join(__dirname, '../OSFR Server'), path.join(__dirname, '../Server/'), (err) => {
@@ -158,8 +159,9 @@ document.getElementById('install').addEventListener('click', async () => {
         document.getElementById('install').disabled = true;
         document.getElementById('progress').style.width = '0%';
         document.getElementById('progress-container').style.display = 'block';
-        getInstallerFile('https://github.com/cccfire/OpenSourceFreeRealms/releases/download/v1.2/OSFR.Client.zip', path.join(__dirname, '../', 'Client.zip')).then(() => {
+        getInstallerFile('https://github.com/cccfire/OpenSourceFreeRealms/releases/download/v1.2/OSFR.Client.zip', path.join(__dirname, '../', 'Client.zip'), "Client").then(() => {
             extractFiles(path.join(__dirname, '../', 'Client.zip'), path.join(__dirname, '../')).then(() => {
+                document.getElementById('toast').innerHTML = '';
                 // Rename OSFR Client folder to Client
                 fs.rename(path.join(__dirname, '../OSFR Client'), path.join(__dirname, '../Client/'), (err) => {
                     if (err) throw err;
@@ -173,12 +175,25 @@ document.getElementById('install').addEventListener('click', async () => {
         });
     }
 
-    function extractFiles (file, path) {
+    function extractFiles (file, filePath) {
         return new Promise((resolve, reject) => {
             fs.createReadStream(file)
-            .pipe(unzipper.Extract({ path: path})).on('close', () => {
+            .pipe(unzipper.Parse())
+            .on('entry', function (entry) {
+                const fileName = entry.path;
+                const type = entry.type; // 'Directory' or 'File'
+                // if type is Directory, create it
+                if (type === 'Directory') {
+                    fs.mkdir(path.join(filePath, fileName), (err) => {
+                        if (err) throw err;
+                    });
+                } else {
+                    document.getElementById('toast').innerHTML = `Extracting ${fileName}...`
+                    entry.pipe(fs.createWriteStream(path.join(filePath, fileName)));
+                }
+            }).on('close', () => {
                 resolve();
-            });
+            }); 
         });
     }
 }); 
