@@ -7,6 +7,7 @@ const request = require("request");
 const path = require("path");
 const { exec } = require('child_process'); // Import exec function from child_process module
 const { shell } = require("electron");
+const unzipper = require('unzipper');
 const toast = document.getElementById("toast");
 toast.innerHTML = "Checking for updates...";
 
@@ -44,7 +45,7 @@ fetch("https://raw.githubusercontent.com/Lillious/FreeRealms-Launcher/main/packa
                     fs.unlink(path.join(__dirname, '../', 'Update.zip'), (err) => {
                         if (err) return console.error(err);
                         // Open the new version of the launcher
-                        shell.openPath(path.join(__dirname, '../', 'FreeRealms.Launcher.exe'));
+                        shell.openPath(path.join(__dirname, '../', 'FreeRealmsLauncher.exe'));
                         // Close the current version of the launcher
                         window.close();
                     });
