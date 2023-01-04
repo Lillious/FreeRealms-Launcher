@@ -9,7 +9,7 @@ const unzipper = require('unzipper');
 
 // Check if config.json contains values for FirstName and LastName and set them to the input fields
 if (fs.existsSync(path.join(__dirname, '../config.json'))) {
-    const config = require('../../../config.json');
+    const config = require(path.join(__dirname, '../config.json'));
     if (config.FirstName != '' && config.LastName != '') {
         document.getElementById('firstname').value = config.FirstName;
         document.getElementById('lastname').value = config.LastName;
