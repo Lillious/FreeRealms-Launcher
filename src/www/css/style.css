@@ -188,7 +188,6 @@ footer {
 }
 
 #progress {
-    transition: 0.3s;
     position: absolute;
     top: 0;
     left: 0;

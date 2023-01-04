@@ -1,8 +1,7 @@
 const { ipcRenderer } = require('electron');
-const fetch = require('node-fetch');
 const close = document.getElementById('close');
 const minimize = document.getElementById('minimize');
-const { exec, spawn } = require('child_process'); // Import exec function from child_process module
+const { exec } = require('child_process'); // Import exec function from child_process module
 const fs = require('fs'); // Import fs module
 const path = require('path'); // Import path module
 const request = require('request');
@@ -10,7 +9,7 @@ const unzipper = require('unzipper');
 
 // Check if config.json contains values for FirstName and LastName and set them to the input fields
 if (fs.existsSync(path.join(__dirname, '../config.json'))) {
-    const config = require('../config.json');
+    const config = require('../../../config.json');
     if (config.FirstName != '' && config.LastName != '') {
         document.getElementById('firstname').value = config.FirstName;
         document.getElementById('lastname').value = config.LastName;
@@ -29,6 +28,18 @@ minimize.addEventListener('click', () => {
 
 // Start Apache and Tomcat
 const startServer = document.getElementById('start-server');
+
+const updateToast = (message, options) => {
+    document.getElementById('toast').innerHTML = message;
+    if (options.progressbar) {
+        document.getElementById('install').disabled = true;
+        document.getElementById('progress').style.width = '0%';
+        document.getElementById('progress-container').style.display = 'block';
+    } else {
+        document.getElementById('install').disabled = false;
+        document.getElementById('progress-container').style.display = 'none';
+    }
+}
 
 // Check if the server is running as a subprocess
 exec('tasklist', (err, stdout, stderr) => {
@@ -68,17 +79,27 @@ setInterval(() => {
     });
 }, 1000);
 
-// Check if the server files and client files exist
 if (!fs.existsSync(path.join(__dirname, '../Server/', 'OSFRServer.exe')) || !fs.existsSync(path.join(__dirname, '../Client/', 'FreeRealms.exe'))) {
-    document.getElementById('start-server').disabled = true;
-    document.getElementById('uninstall').disabled = true;
-    document.getElementById('play-status').disabled = true;
-    document.getElementById('firstname').disabled = true;
-    document.getElementById('lastname').disabled = true;
+    document.getElementById('install').disabled = false;
 } else {
     document.getElementById('install').disabled = true;
-    document.getElementById('firstname').disabled = false;
-    document.getElementById('lastname').disabled = false;
+}
+
+// Check if the server files and client files exist
+if (!fs.existsSync(path.join(__dirname, '../Server/', 'OSFRServer.exe'))) {
+    document.getElementById('start-server').disabled = true;
+    document.getElementById('firstname').disabled = true;
+    document.getElementById('lastname').disabled = true;
+}
+else {
+    document.getElementById('start-server').disabled = false;
+}
+
+if(!fs.existsSync(path.join(__dirname, '../Client/', 'FreeRealms.exe'))) {
+    document.getElementById('play-status').disabled = true;
+}
+else {
+    document.getElementById('play-status').disabled = false;
 }
 
 function getInstallerFile (installerfileURL,installerfilename, name) {
@@ -117,37 +138,29 @@ function showDownloadingProgress(received, total) {
     if (document.getElementById('progress-text').innerHTML == '100.0%') {
         document.getElementById('progress-text').innerHTML = '0%'
         document.getElementById('progress-container').style.display = 'none';
-        document.getElementById('install').disabled = true;
-        document.getElementById('uninstall').disabled = false;
-        document.getElementById('start-server').disabled = false;
-        document.getElementById('play-status').disabled = false;
     } else {
         document.getElementById('progress-container').style.display = 'block';
-        document.getElementById('install').disabled = true;
-        document.getElementById('uninstall').disabled = true;
-        document.getElementById('start-server').disabled = true;
-        document.getElementById('play-status').disabled = true;
     }
 }
 
 document.getElementById('install').addEventListener('click', async () => {
     // Download Server files if they don't exist
     if (!fs.existsSync(path.join(__dirname, '../Server/', 'OSFRServer.exe'))) {
-        document.getElementById('toast').innerHTML = 'Server download is currently in progress...';
-        document.getElementById('install').disabled = true;
-        document.getElementById('progress').style.width = '0%';
-        document.getElementById('progress-container').style.display = 'block';
-
         getInstallerFile('https://github.com/cccfire/OpenSourceFreeRealms/releases/download/v1.2/OSFR.Server.zip', path.join(__dirname, '../', 'OSFR.Server.zip'), "Server").then(() => {
             extractFiles(path.join(__dirname, '../', 'OSFR.Server.zip'), path.join(__dirname, '../')).then(() => {
                 // rename OSFR Server folder to Server
                 fs.rename(path.join(__dirname, '../OSFR Server'), path.join(__dirname, '../Server/'), (err) => {
-                    if (err) throw err;
+                    if (err) {
+                        showToast('error', 'Error renaming OSFR Server folder to Server');
+                    } else {
+                        showToast('success', 'Server installed successfully');
+                        document.getElementById('start-server').disabled = false;
+                    }
                 });
 
                 // Delete OSFR.Server.zip
                 fs.unlink(path.join(__dirname, '../OSFR.Server.zip'), (err) => {
-                    if (err) throw err;
+                    if (err) showToast('error', 'Error deleting OSFR.Server.zip');
                 });
             });
         });
@@ -155,21 +168,23 @@ document.getElementById('install').addEventListener('click', async () => {
 
     // Download Client files if they don't exist
     if (!fs.existsSync(path.join(__dirname, '../Client/', 'FreeRealms.exe'))) {
-        document.getElementById('toast').innerHTML = 'Client download is currently in progress...';
-        document.getElementById('install').disabled = true;
-        document.getElementById('progress').style.width = '0%';
-        document.getElementById('progress-container').style.display = 'block';
+        updateToast('Client download is currently in progress...', { progressbar: true });
         getInstallerFile('https://github.com/cccfire/OpenSourceFreeRealms/releases/download/v1.2/OSFR.Client.zip', path.join(__dirname, '../', 'Client.zip'), "Client").then(() => {
             extractFiles(path.join(__dirname, '../', 'Client.zip'), path.join(__dirname, '../')).then(() => {
                 document.getElementById('toast').innerHTML = '';
                 // Rename OSFR Client folder to Client
                 fs.rename(path.join(__dirname, '../OSFR Client'), path.join(__dirname, '../Client/'), (err) => {
-                    if (err) throw err;
+                    if (err) {
+                        showToast('error', 'Error renaming OSFR Client folder to Client');
+                    } else {
+                        showToast('success', 'Client installed successfully');
+                        document.getElementById('play-status').disabled = false;
+                    }
                 });
 
                 // Delete Client.zip
                 fs.unlink(path.join(__dirname, '../Client.zip'), (err) => {
-                    if (err) throw err;
+                    if (err) showToast('error', 'Error deleting Client.zip');
                   });
             });
         });
@@ -199,41 +214,33 @@ document.getElementById('install').addEventListener('click', async () => {
 }); 
 
 class Server {
-
     constructor (client, server, args) {
         this.client = client;
         this.server = server;
         this.args = args;
     }
-    
     Start () {
         // Disable first and last name input fields
         document.getElementById('firstname').disabled = true;
         document.getElementById('lastname').disabled = true;
         var FirstName = document.getElementById('firstname').value.toString().charAt(0).toUpperCase() + document.getElementById('firstname').value.toString().slice(1).toLowerCase();
         var LastName = document.getElementById('lastname').value.toString().charAt(0).toUpperCase() + document.getElementById('lastname').value.toString().slice(1).toLowerCase();
-        FirstName.replace(/[^a-zA-Z ]/g, "");
-        LastName.replace(/[^a-zA-Z ]/g, "");
-        // Remove all spaces from first and last name
-        FirstName = FirstName.replace(/\s/g, '');
-        LastName = LastName.replace(/\s/g, '');
-        
+        // Remove spaces
+        FirstName = FirstName.replace(/[^a-zA-Z ]\s/g, "");
+        LastName = LastName.replace(/[^a-zA-Z ]\s/g, "");
         if (FirstName === '') {
             showToast('error', `First name cannot be empty`);
             document.getElementById('firstname').disabled = false;
             document.getElementById('lastname').disabled = false;
             return;
         }
-
-        // Check if config.json is empty
+        // Check if server config.json is empty
         const config = fs.readFileSync(path.join(__dirname, '../Server/config.json'), 'utf8');
         if (config === '') {
             startServer.innerHTML = 'Start Server';
             showToast('error', `Invalid or empty configuration file`);
             return;
         }
-
-        // Write the value of guid.txt to Server/Customize/PacketSendSelfToClient.json  PlayerGUID
         const configPath = fs.readFileSync(path.join(__dirname, '../config.json'), 'utf8');
         const configJson = JSON.parse(configPath);
         const packetSendSelfToClient = fs.readFileSync(path.join(__dirname, '../Server/Customize/PacketSendSelfToClient.json'), 'utf8');
@@ -248,11 +255,9 @@ class Server {
         
         const process = exec(this.server, { cwd: path.join(__dirname, '../Server/') }, (err, stdout, stderr) => {
         });
-
         process.stderr.on('data', (data) => {
             console.log(data);
         });
-
         process.stdout.on('data', (data) => {
             console.log(data);
             if (data.includes('Started listening!')) {
@@ -265,6 +270,9 @@ class Server {
                 startServer.innerHTML = 'Start Server';
                 return;
             }
+        });
+        process.on('error', (err) => {
+            console.log(err);
         });
     }
 
@@ -345,4 +353,16 @@ function showToast (mode, message) {
     setTimeout(() => {
         document.body.removeChild(NotificationContainer);
     }, 3000);
+
+    // Write to log file
+    // Create log file if it doesn't exist
+    if (!fs.existsSync(path.join(__dirname, '../log.txt'))) {
+        fs.writeFileSync(path.join(__dirname, '../log.txt'), '');
+    }
+    // Append message to log file
+    fs.appendFileSync(path.join(__dirname, '../log.txt'), `${new Date().toLocaleString()} [${mode}] ${message}\n`, (err) => {
+        if (err) {
+            console.error(err);
+        }
+    });
 };
