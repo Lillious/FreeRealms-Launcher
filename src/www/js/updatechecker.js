@@ -6,11 +6,9 @@ const fs = require("fs");
 const request = require("request");
 const path = require("path");
 const { exec } = require('child_process'); // Import exec function from child_process module
-const { shell } = require("electron");
 const unzipper = require('unzipper');
 const toast = document.getElementById("toast");
 toast.innerHTML = "Checking for updates...";
-
 
 close.addEventListener('click', () => {
     exec('taskkill /f /im OSFRServer.exe', (err, stdout, stderr) => {
@@ -26,7 +24,6 @@ minimize.addEventListener('click', () => {
 const version = require(path.join(__dirname, "../package.json")).version;
 // Parse https://raw.githubusercontent.com/Lillious/FreeRealms-Launcher/main/package.json as a json and check if version is greater than the current version
 // If it is, show a toast with the update message and a button to download the update
-console.log(version);
 fetch("https://raw.githubusercontent.com/Lillious/FreeRealms-Launcher/main/package.json", {
     headers: {
     'Cache-Control': 'no-cache'
@@ -39,16 +36,13 @@ fetch("https://raw.githubusercontent.com/Lillious/FreeRealms-Launcher/main/packa
         const updateButton = document.getElementById("update");
         updateButton.onclick = () => {
             // Download the update and save it to the current directory
-            getInstallerFile(`https://github.com/Lillious/FreeRealms-Launcher/releases/download/v${json.version}/FreeRealms.Launcher.zip`, path.join(__dirname, '../', 'Update.zip'), `update v${json.version}`).then(() => {
-                extractFiles(path.join(__dirname, '../', 'Update.zip'), path.join(__dirname, '../')).then(() => {
-                    // Delete the downloaded update
-                    fs.unlink(path.join(__dirname, '../', 'Update.zip'), (err) => {
-                        if (err) return console.error(err);
-                        // Open the new version of the launcher
-                        shell.openPath(path.join(__dirname, '../', 'FreeRealmsLauncher.exe'));
-                        // Close the current version of the launcher
-                        window.close();
+            getInstallerFile(`https://github.com/Lillious/FreeRealms-Launcher/releases/download/v${json.version}/FreeRealms.Launcher_v${json.version}.zip`, path.join(__dirname, '../', 'Update.zip'), `update v${json.version}`).then(() => {
+                extractFiles(path.join(__dirname, '../', 'Update.zip'), path.join(__dirname, '../../../../')).then(() => {
+                    toast.innerHTML = "Update Installed! Please discard this current instance of the launcher";
+                    exec(`FreeRealmsLauncher.exe`, { cwd: path.join(__dirname, `../../../../FreeRealms Launcher_v${json.version}/`) }, (err, stdout, stderr) => {
                     });
+                }).catch((err) => {
+                    console.log(err);
                 });
             });
         }
