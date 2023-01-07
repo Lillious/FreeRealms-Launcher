@@ -49,7 +49,7 @@ fetch("https://raw.githubusercontent.com/Lillious/FreeRealms-Launcher/main/packa
             const installPath = path.join(__dirname, `../../../`);
             const executablePath = path.join(__dirname, `../../../`);
             const executable = "FreeRealmsLauncher.exe";
-            const appname = "FreeRealmsLauncher";
+            const appname = "FreeRealmsLauncher.exe";
             const url = `https://github.com/Lillious/FreeRealms-Launcher/releases/download/v${json.version}/FreeRealms.Launcher_v${json.version}.zip`;
             exec(`"${updatePath}" --url=${url} --install=${installPath} --executablepath=${executablePath} --executable=${executable} --appname=${appname}`, (err) => {
                 if (err) {

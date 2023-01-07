@@ -3,6 +3,7 @@ const crash = (err) => { console.error(`\x1b[31m${err}\x1b[0m`); process.exit(1)
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+process.noAsar = true;
 
 // Check if config.json exists
 if (!fs.existsSync(path.join(__dirname, 'config.json'))) {
