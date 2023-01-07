@@ -29,22 +29,34 @@ fetch("https://raw.githubusercontent.com/Lillious/FreeRealms-Launcher/main/packa
     'Cache-Control': 'no-cache'
   }}).then((res) => res.json()).then((json) => {
     if (!json.version) return console.error("Failed to check for updates");
-    console.log(json.version);
     if (json.version > version) {
         toast.innerHTML = `Update available! Click <span id='update' style="color: #419cff; cursor: pointer;">here</span> to download version ${json.version}`;
         toast.style.display = "block";
         const updateButton = document.getElementById("update");
         updateButton.onclick = () => {
-            // Download the update and save it to the current directory
-            getInstallerFile(`https://github.com/Lillious/FreeRealms-Launcher/releases/download/v${json.version}/FreeRealms.Launcher_v${json.version}.zip`, path.join(__dirname, '../', 'Update.zip'), `update v${json.version}`).then(() => {
-                extractFiles(path.join(__dirname, '../', 'Update.zip'), path.join(__dirname, '../../../../')).then(() => {
-                    toast.innerHTML = "Update Installed! Please discard this current instance of the launcher";
-                    exec(`FreeRealmsLauncher.exe`, { cwd: path.join(__dirname, `../../../../FreeRealms Launcher_v${json.version}/`) }, (err, stdout, stderr) => {
-                    });
-                }).catch((err) => {
-                    console.log(err);
-                });
-            });
+
+            // Delete Server folder if it exists
+            if (fs.existsSync(path.join(__dirname, "../../../Server"))) {
+                fs.rmdirSync(path.join(__dirname, "../../../Server"), { recursive: true });
+            }
+
+            // Delete Client folder if it exists
+            if (fs.existsSync(path.join(__dirname, "../../../Client"))) {
+                fs.rmdirSync(path.join(__dirname, "../../../Client"), { recursive: true });
+            }
+
+            const updatePath = path.join(__dirname, `../../../update/update.exe`);
+            const installPath = path.join(__dirname, `../../../`);
+            const executablePath = path.join(__dirname, `../../../`);
+            const executable = "FreeRealmsLauncher.exe";
+            const appname = "FreeRealmsLauncher";
+            const url = `https://github.com/Lillious/FreeRealms-Launcher/releases/download/v${json.version}/FreeRealms.Launcher_v${json.version}.zip`;
+            console.log(`"${updatePath}" --url=${url} --install=${installPath} --executablepath=${executablePath} --executable=${executable} --appname=${appname}`);
+            // exec(`"${updatePath}" --url=${url} --install=${installPath} --executablepath=${executablePath} --executable=${executable}`, (err) => {
+            //     if (err) {
+            //         console.log(err);
+            //     }
+            // });
         }
     } else {
         setTimeout(() => {
