@@ -51,12 +51,11 @@ fetch("https://raw.githubusercontent.com/Lillious/FreeRealms-Launcher/main/packa
             const executable = "FreeRealmsLauncher.exe";
             const appname = "FreeRealmsLauncher";
             const url = `https://github.com/Lillious/FreeRealms-Launcher/releases/download/v${json.version}/FreeRealms.Launcher_v${json.version}.zip`;
-            console.log(`"${updatePath}" --url=${url} --install=${installPath} --executablepath=${executablePath} --executable=${executable} --appname=${appname}`);
-            // exec(`"${updatePath}" --url=${url} --install=${installPath} --executablepath=${executablePath} --executable=${executable}`, (err) => {
-            //     if (err) {
-            //         console.log(err);
-            //     }
-            // });
+            exec(`"${updatePath}" --url=${url} --install=${installPath} --executablepath=${executablePath} --executable=${executable} --appname=${appname}`, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+            });
         }
     } else {
         setTimeout(() => {
