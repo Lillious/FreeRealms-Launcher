@@ -36,22 +36,29 @@ body {
 
 input {
     outline: none;
+    margin-bottom: 16px;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 
 button {
     cursor: pointer;
     user-select: none;
     outline: none;
+    margin-bottom: 16px;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 
 footer {
     position: fixed;
     bottom: 0;
     padding: 10px;
-    left: 100px;
-    right: 100px;
-    font-size: 12px;
+    left: 200px;
+    right: 200px;
+    font-size: 10px;
     text-align: center;
+    opacity: 0.5;
 }
 
 /* titlebar */
@@ -86,6 +93,7 @@ footer {
     font-size: 12px;
     /* Button spacing */
     margin-left: -5px;
+    margin-right: 0px;
     outline: none;
     font-weight: bold;
     border: none;
@@ -230,10 +238,10 @@ footer {
     text-align: center;
 }
 
-#control-buttons button {
+#server-tools button, #control-buttons button {
     transition: 0.3s;
     padding: 10px;
-    width: 100px;
+    min-width: 100px;
     background: rgba(0, 0, 0, 0.5);
     color: #fff;
     border: 1px solid rgba(0, 0, 0, 0.8);
@@ -243,31 +251,27 @@ footer {
     display: none;
 }
 
-#control-buttons #install:hover, #control-buttons #play-status:hover, #control-buttons #start-server:hover {
+#server-tools button:hover, #control-buttons #install:hover, #control-buttons #play-status:hover, #control-buttons #start-server:hover {
     transition: 0.3s;
     background: rgba(129, 101, 174, 0.3);
-    border: 1px solid rgba(129, 101, 174, 0.1);
+    border: 1px solid rgba(129, 101, 174, 0.5);
 }
 
-#control-buttons #uninstall:hover {
-    transition: 0.3s;
-    background: rgba(220, 118, 130, 0.4);
-    border: 1px solid rgba(220, 118, 130, 0.1);
-}
-
-#control-buttons #play-status:disabled, #control-buttons #install:disabled, #control-buttons #uninstall:disabled, #control-buttons #start-server:disabled {
+#server-tools button:disabled, #control-buttons #play-status:disabled, #control-buttons #install:disabled, #control-buttons #uninstall:disabled, #control-buttons #start-server:disabled {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(0, 0, 0, 0.4);
     color: rgba(255, 255, 255, 0.5);
 }
 
-#control-buttons #play-status:disabled:hover, #control-buttons #install:disabled:hover, #control-buttons #uninstall:disabled:hover, #control-buttons #start-server:disabled:hover {
+#server-tools button:disabled:hover, #control-buttons #play-status:disabled:hover, #control-buttons #install:disabled:hover, #control-buttons #uninstall:disabled:hover, #control-buttons #start-server:disabled:hover {
     cursor: not-allowed;
 }
 
 #hero-image {
     position: fixed;
     left: 0;
+    top: 50px;
+    z-index: -1;
     overflow: hidden;
 }
 
@@ -303,12 +307,12 @@ footer {
 
 #playerinput {
     position: fixed;
-    bottom: 75px;
-    left: 15px;
+    bottom: 25px;
+    left: 10px;
 }
 
 #playerinput input {
-    width: 100px;
+    width: 135px;
     padding: 10px;
     background: rgba(0, 0, 0, 0.5);
     color: #fff;
@@ -330,5 +334,44 @@ footer {
     cursor: not-allowed;
     user-select: none;
 }
+
+#server-tools {
+    position: fixed;
+    top: 55px;
+    left: 5px;
+}
+
+#server-tools div {
+    /* No line breaks */
+    display: inline-block;
+    margin-left: 10px;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    /*prevent text from going to the next line*/
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 5px;
+    margin-top: 25px;
+  
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
 
 /* End General Styling */

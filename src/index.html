@@ -12,6 +12,9 @@
 
     <!-- Preload CSS -->
     <link rel='preload' href='./www/css/style.css' as='style'>
+    <link rel='preload' href='./www/css/icons.css' as='style'>
+    
+    <link rel='stylesheet' href='./www/css/icons.css'>
     <link rel='stylesheet' href='./www/css/style.css'>
 </head>
 
@@ -29,18 +32,27 @@
     <!-- Page Content -->
     <div id='content'>
         <div class='container'>
+            <div id="server-tools">
+                <div id="import-customize" class="gg-import tooltip">
+                    <span class="tooltiptext">Import Customizations</span>
+                </div>
+                <input type="file" id="import-customize-file" accept="application/json" style="display: none;"/>
+                <div id="export-customize" class="gg-export tooltip">
+                    <span class="tooltiptext">Export Customizations</span>
+                </div>
+            </div>
             <div id="hero-image">
                 <img src="./www/img/hero.png" draggable="false" alt="Free Realms Hero Image"/>
             </div>
             <div id="control-buttons">
-                <button id="uninstall">Uninstall</button>
                 <button id="install">Install</button>
                 <button id="start-server">Start Server</button>
                 <button id="play-status">Play</button>
             </div>
             <div id="playerinput">
-                <input type="text" autocomplete="false" spellcheck="false" id="firstname" placeholder="First Name">
-                <input type="text" autocomplete="false" spellcheck="false" id="lastname" placeholder="Last Name">
+                <input type="text" autocomplete="false" spellcheck="false" id="firstname" placeholder="First Name (Required)">
+                <br>
+                <input type="text" autocomplete="false" spellcheck="false" id="lastname" placeholder="Last Name (Optional)">
             </div>
             <div id="toast"></div>
             <div id="progress-container">
@@ -48,10 +60,10 @@
                     <div id="progress-text">0.0%</div>
                 </div>
             </div>
-            <div id="version">Version: 1.0.2</div>
+            <div id="version">Version: 1.0.3</div>
             <footer>
-                OSFR is in no way affiliated with Daybreak Game Company LLC, and claims no rights to Free Realms in any way.
-Free Realms is the intellectual property of Daybreak Game Company LLC. No copyright infringement is intended.
+                Open Source Free Realms is not affiliated with Sony Online Entertainment LLC or Daybreak Game Company LLC and claims no rights to Free Realms in any way.
+                All images and trademarks are the property of their respective owners.
             </footer>
         </div>
     </div>

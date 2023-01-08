@@ -323,7 +323,6 @@ document.getElementById('play-status').addEventListener('click', () => {
     OSFRServer.Play();
     // Disable Play button
     document.getElementById('play-status').disabled = true;
-    document.getElementById('uninstall').disabled = true;
 });
 function showToast (mode, message) {
     const NotificationContainer = document.createElement('div');
@@ -366,3 +365,40 @@ function showToast (mode, message) {
         }
     });
 };
+
+document.getElementById('import-customize').addEventListener('click', () => {
+    if (!fs.existsSync(path.join(__dirname, '../Server/Customize'))) return showToast('error', 'Unable to locate PacketSendSelfToClient.json');
+    document.getElementById('import-customize-file').click();
+    document.getElementById('import-customize-file').addEventListener('change', () => {
+        const file = document.getElementById('import-customize-file').files[0];
+        // Check if file is json
+        if (file.type != 'application/json') return showToast('error', 'Failed to import customization file');
+        // Check if file is PacketSendSelfToClient.json
+        if (file.name != 'PacketSendSelfToClient.json') return showToast('error', 'Failed to import customization file');
+        // move file to www folder
+        const cwd = path.join(path.join(__dirname, '../Server/Customize/PacketSendSelfToClient.json'));
+        fs.copyFile(file.path, cwd, (err) => {
+            if (err) {
+                showToast('error', 'Error importing PacketSendSelfToClient.json');
+            } else {
+                showToast('success', 'Imported PacketSendSelfToClient.json');
+                showToast('information', 'Restart the server to apply changes');
+            }
+        });
+    });
+});
+
+// Export customizations
+document.getElementById('export-customize').addEventListener('click', () => {
+    // Check if customize folder exists
+    if (!fs.existsSync(path.join(__dirname, '../Server/Customize'))) return showToast('error', 'Unable to locate PacketSendSelfToClient.json');
+    // Create anchor element
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.setAttribute('href', path.join(__dirname, '../Server/Customize/PacketSendSelfToClient.json'));
+    a.setAttribute('download', 'PacketSendSelfToClient.json');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('success', 'Exported PacketSendSelfToClient.json');
+});
