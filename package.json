@@ -18,6 +18,7 @@
   "dependencies": {
     "node-fetch": "^2.6.7",
     "request": "^2.88.2",
-    "unzipper": "^0.10.11"
+    "unzipper": "^0.10.11",
+    "windows-shortcuts": "^0.1.6"
   }
 }
