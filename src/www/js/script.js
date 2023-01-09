@@ -6,6 +6,7 @@ const fs = require('fs'); // Import fs module
 const path = require('path'); // Import path module
 const request = require('request');
 const unzipper = require('unzipper');
+const ping = require('ping');
 
 // Check if config.json contains values for FirstName and LastName and set them to the input fields
 if (fs.existsSync(path.join(__dirname, '../config.json'))) {
@@ -77,7 +78,7 @@ setInterval(() => {
             }
         }
     });
-}, 1000);
+}, 3000);
 
 if (!fs.existsSync(path.join(__dirname, '../Server/', 'OSFRServer.exe')) || !fs.existsSync(path.join(__dirname, '../Client/', 'FreeRealms.exe'))) {
     document.getElementById('install').disabled = false;
@@ -292,8 +293,12 @@ class Server {
     }
 
     Play () {
-        minimize.click();        // Check if 
-        const process = exec(`${this.client} ${this.args}`, { cwd: path.join(__dirname, '../Client/') }, (err, stdout, stderr) => {
+        // Get server ip from selected server
+        const SelectedServer = document.getElementsByClassName('selected')[0];
+        if (!SelectedServer) return showToast('error', `Please select a server`);
+        const serverIP = `${SelectedServer.children[3].innerHTML}:20260`
+        minimize.click();
+        const process = exec(`${this.client} ${this.args} ${serverIP}`, { cwd: path.join(__dirname, '../Client/') }, (err, stdout, stderr) => {
             if (err) {
                 console.log(err);
             }
@@ -308,7 +313,7 @@ class Server {
 // read GUID.txt file and get GUID from it and use it in args for FreeRealms.exe
 const configPath = fs.readFileSync(path.join(__dirname, '../config.json'), 'utf8');
 const configJson = JSON.parse(configPath);
-const args = `inifile=ClientConfig.ini Guid=${configJson.GUID} Server=127.0.0.1:20260 Ticket=DWCq3TMkGwj9ZZt Internationalization:Locale=8 ShowMemberLoadingScreen=0 Country=US key=m80HqsRO9i4PjJSCOasVMg== CasSessionId=Jk6TeiRMc4Ba38NO`
+const args = `inifile=ClientConfig.ini Guid=${configJson.GUID} Ticket=DWCq3TMkGwj9ZZt Internationalization:Locale=8 ShowMemberLoadingScreen=0 Country=US key=m80HqsRO9i4PjJSCOasVMg== CasSessionId=Jk6TeiRMc4Ba38NO`
 const OSFRServer = new Server("FreeRealms.exe", "OSFRServer.exe", args);
 
 startServer.addEventListener('click', () => {
@@ -324,6 +329,7 @@ document.getElementById('play-status').addEventListener('click', () => {
     // Disable Play button
     document.getElementById('play-status').disabled = true;
 });
+
 function showToast (mode, message) {
     const NotificationContainer = document.createElement('div');
     const NotificationContent = document.createElement('div');
@@ -402,3 +408,129 @@ document.getElementById('export-customize').addEventListener('click', () => {
     document.body.removeChild(a);
     showToast('success', 'Exported PacketSendSelfToClient.json');
 });
+
+// Add a server
+document.getElementById('add-server').addEventListener('click', () => {
+    const serverName = document.getElementById('server-name-input').value;
+    const serverIp = document.getElementById('server-ip-input').value;
+    if (serverName === "" || serverIp === "") return showToast('error', 'Unable to add server');
+    // Check if server already exists if there are any servers
+    if (configJson.ServerList.find((server) => server.Name === serverName)) return showToast('error', 'Server already exists by that name');
+    if (configJson.ServerList.find((server) => server.IP === serverIp)) return showToast('error', 'Server already exists by that IP');
+    // Clear input fields
+    document.getElementById('server-name-input').value = '';
+    document.getElementById('server-ip-input').value = '';
+    const parent = document.getElementById('connections');
+    const server = document.createElement('div');
+    server.addEventListener('click', () => {
+        // remove the selected class from all servers
+        document.querySelectorAll('.server').forEach((servers) => {
+            servers.classList.remove('selected');
+        });
+        // add the selected class to the clicked server
+        servers.classList.add('selected');
+    });
+    server.classList.add('server');
+    const serverStatus = document.createElement('span');
+    serverStatus.id = 'server-status';
+    serverStatus.innerHTML = 'Checking...';
+    serverStatus.style.color = '#f4a261';
+    const serverNameSpan = document.createElement('span');
+    serverNameSpan.id = 'server-name';
+    serverNameSpan.innerHTML = serverName;
+    const remove = document.createElement('button');
+    remove.id = 'remove-server';
+    remove.innerHTML = '-';
+    remove.addEventListener('click', () => {
+        // Remove server from config file
+        configJson.ServerList = configJson.ServerList.filter((server) => server.Name !== serverName);
+        // Write to config file
+        fs.writeFileSync(path.join(__dirname, '../config.json'), JSON.stringify(configJson, null, 4));
+        parent.removeChild(server);
+    });
+    server.appendChild(remove);
+    const serverIpSpan = document.createElement('span');
+    serverIpSpan.id = 'server-ip';
+    serverIpSpan.innerHTML = serverIp;
+    server.appendChild(serverStatus);
+    server.appendChild(serverNameSpan);
+    server.appendChild(serverIpSpan);
+    parent.appendChild(server);
+    // Add server to config file
+    configJson.ServerList.push({
+        Name: serverName,
+        IP: serverIp,
+    });
+
+    // Write to config file
+    fs.writeFileSync(path.join(__dirname, '../config.json'), JSON.stringify(configJson, null, 4));
+});
+
+configJson.ServerList.forEach((server) => {
+    const parent = document.getElementById('connections');
+    const serverDiv = document.createElement('div');
+    serverDiv.addEventListener('click', () => {
+        // remove the selected class from all servers
+        document.querySelectorAll('.server').forEach((server) => {
+            server.classList.remove('selected');
+        });
+        // add the selected class to the clicked server
+        serverDiv.classList.add('selected');
+    });
+    // add class
+    serverDiv.classList.add('server');
+    const serverStatus = document.createElement('span');
+    serverStatus.id = 'server-status';
+    serverStatus.innerHTML = 'Checking...';
+    serverStatus.style.color = '#f4a261';
+    const serverName = document.createElement('span');
+    serverName.id = 'server-name';
+    serverName.innerHTML = server.Name;
+    const remove = document.createElement('button');
+    remove.id = 'remove-server';
+    remove.innerHTML = '-';
+    remove.addEventListener('click', () => {
+        // Remove server from config file
+        configJson.ServerList = configJson.ServerList.filter((server) => server.Name !== serverName.innerHTML);
+        // Write to config file
+        fs.writeFileSync(path.join(__dirname, '../config.json'), JSON.stringify(configJson, null, 4));
+        parent.removeChild(serverDiv);
+    });
+    serverDiv.appendChild(remove);
+    const serverIp = document.createElement('span');
+    serverIp.id = 'server-ip';
+    serverIp.innerHTML = server.IP;
+    serverDiv.appendChild(serverStatus);
+    serverDiv.appendChild(serverName);
+    serverDiv.appendChild(serverIp);
+    parent.appendChild(serverDiv);
+});
+
+setInterval(() => {
+    // Only run if play online is checked
+    configJson.ServerList.forEach((server) => {
+        // Check if server is online
+        let servers = document.getElementsByClassName('server');
+        ping.sys.probe(server.IP, (isAlive) => {
+            if (isAlive) {
+                // Find the server in the DOM by ip
+                for (let i = 0; i < servers.length; i++) {
+                    const serverIP = servers[i].children[3].innerHTML;
+                    if (serverIP == server.IP) {
+                        servers[i].children[1].innerHTML = 'Online';
+                        servers[i].children[1].style.color = '#2ecc71';
+                    }
+                }
+            } else {
+                // Find the server in the DOM by ip
+                for (let i = 0; i < servers.length; i++) {
+                    const serverIP = servers[i].children[3].innerHTML;
+                    if (serverIP == server.IP) {
+                        servers[i].children[1].innerHTML = 'Offline';
+                        servers[i].children[1].style.color = '#e74c3c';
+                    }
+                }
+            }
+        });
+    });
+}, 5000);

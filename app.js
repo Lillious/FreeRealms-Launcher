@@ -13,6 +13,7 @@ if (!fs.existsSync(path.join(__dirname, 'config.json'))) {
         GUID: "",
         FirstName: "",
         LastName: "",
+        ServerList: [],
     }, null, 4));
 }
 
@@ -56,9 +57,9 @@ const createWindow = () => {
         width: 1000,
         minWidth: 1000,
         maxWidth: 1000,
-        height: 750,
-        minHeight: 750,
-        maxHeight: 750,
+        height: 375,
+        minHeight: 375,
+        maxHeight: 375,
         frame: false,
         darkTheme: true,
         resizable: true,

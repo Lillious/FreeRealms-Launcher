@@ -30,7 +30,7 @@ fetch("https://raw.githubusercontent.com/Lillious/FreeRealms-Launcher/main/packa
   }}).then((res) => res.json()).then((json) => {
     if (!json.version) return console.error("Failed to check for updates");
     if (json.version > version) {
-        toast.innerHTML = `An update is available!<br><span id='update' style="color: #419cff; cursor: pointer;">Download v${json.version}</span><br><br><br><span id='skip-update' style="color: #419cff; cursor: pointer;">Skip update</span>`;
+        toast.innerHTML = `An update is available!<br><span id='update' style="color: #419cff; cursor: pointer;">Download v${json.version}</span><br><br><span id='skip-update' style="color: #419cff; cursor: pointer;">Skip update</span>`;
         toast.style.display = "block";
         const updateButton = document.getElementById("update");
         const skipUpdateButton = document.getElementById("skip-update");

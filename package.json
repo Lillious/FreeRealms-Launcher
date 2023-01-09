@@ -13,10 +13,11 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^22.0.0-alpha.8",
-    "electron-packager": "^17.0.0"
+    "electron-packager": "^17.1.1"
   },
   "dependencies": {
     "node-fetch": "^2.6.7",
+    "ping": "^0.4.2",
     "request": "^2.88.2",
     "unzipper": "^0.10.11",
     "windows-shortcuts": "^0.1.6"

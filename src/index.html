@@ -33,12 +33,20 @@
     <div id='content'>
         <div class='container'>
             <div id="server-tools">
-                <div id="import-customize" class="gg-import tooltip">
-                    <span class="tooltiptext">Import Customizations</span>
+                <div id="import-export">
+                    <div id="import-customize" class="gg-import tooltip clickable">
+                        <span class="tooltiptext">Import Customizations</span>
+                    </div>
+                    <input type="file" id="import-customize-file" accept="application/json" style="display: none;"/>
+                    <div id="export-customize" class="gg-export tooltip clickable">
+                        <span class="tooltiptext">Export Customizations</span>
+                    </div>
                 </div>
-                <input type="file" id="import-customize-file" accept="application/json" style="display: none;"/>
-                <div id="export-customize" class="gg-export tooltip">
-                    <span class="tooltiptext">Export Customizations</span>
+                <div id="connections"></div>
+                <div id="connection-buttons">
+                    <button id="add-server">Add Server</button>
+                    <input type="text" id="server-name-input" placeholder="Server Name">
+                    <input type="text" id="server-ip-input" placeholder="Server IP">
                 </div>
             </div>
             <div id="hero-image">
@@ -46,12 +54,13 @@
             </div>
             <div id="control-buttons">
                 <button id="install">Install</button>
+                <br>
                 <button id="start-server">Start Server</button>
+                <br>
                 <button id="play-status">Play</button>
             </div>
             <div id="playerinput">
                 <input type="text" autocomplete="false" spellcheck="false" id="firstname" placeholder="First Name (Required)">
-                <br>
                 <input type="text" autocomplete="false" spellcheck="false" id="lastname" placeholder="Last Name (Optional)">
             </div>
             <div id="toast"></div>
@@ -60,7 +69,7 @@
                     <div id="progress-text">0.0%</div>
                 </div>
             </div>
-            <div id="version">Version: 1.0.3</div>
+            <div id="version">Version: 1.0.4</div>
             <footer>
                 Open Source Free Realms is not affiliated with Sony Online Entertainment LLC or Daybreak Game Company LLC and claims no rights to Free Realms in any way.
                 All images and trademarks are the property of their respective owners.

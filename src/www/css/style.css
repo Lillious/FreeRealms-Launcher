@@ -36,18 +36,13 @@ body {
 
 input {
     outline: none;
-    margin-bottom: 16px;
-    margin-left: 8px;
-    margin-right: 8px;
 }
 
 button {
     cursor: pointer;
     user-select: none;
     outline: none;
-    margin-bottom: 16px;
-    margin-left: 8px;
-    margin-right: 8px;
+    margin-bottom: 5px;
 }
 
 footer {
@@ -178,7 +173,6 @@ footer {
 .float-left {
     float: left;
 }
-
 .center {
     display: flex;
     justify-content: center;
@@ -187,10 +181,10 @@ footer {
 #progress-container {
     position: fixed;
     display: none;
-    bottom: 150px;
-    height: 25px;
-    left: 10%;
-    right: 10%;
+    top: 35px;
+    height: 5px;
+    left: 0;
+    right: 0;
     background: rgba(0, 0, 0, 0.5);
     z-index: 1000;
 }
@@ -214,13 +208,13 @@ footer {
     line-height: 25px;
     color: rgba(255, 255, 255, 1);
     text-shadow: 1px 1px 2px black;
+    display: none;
 }
 
 #toast {
     position: fixed;
-    bottom: 180px;
-    left: 10%;
-    right: 10%;
+    top: 47px;
+    left: 15px;
     height: 25px;
     z-index: 1000;
     text-align: center;
@@ -232,23 +226,18 @@ footer {
 #control-buttons {
     /* center buttons at the bottom */
     position: fixed;
-    bottom: 75px;
-    left: 0;
-    right: 0;
+    top: 120px;
+    left: 416px;
     text-align: center;
 }
 
 #server-tools button, #control-buttons button {
     transition: 0.3s;
-    padding: 10px;
+    padding: 12.1px;
     min-width: 100px;
     background: rgba(0, 0, 0, 0.5);
     color: #fff;
     border: 1px solid rgba(0, 0, 0, 0.8);
-}
-
-#uninstall {
-    display: none;
 }
 
 #server-tools button:hover, #control-buttons #install:hover, #control-buttons #play-status:hover, #control-buttons #start-server:hover {
@@ -268,11 +257,18 @@ footer {
 }
 
 #hero-image {
-    position: fixed;
-    left: 0;
-    top: 50px;
     z-index: -1;
-    overflow: hidden;
+    width: 45%;
+    height: 100%;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+
+#hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .notification-bar {
@@ -280,7 +276,7 @@ footer {
     /* display: none; */
     right: 25px;
     top: 55px;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.5);
     border-right: 4px solid #238636;
     height: 35px;
 }
@@ -307,71 +303,135 @@ footer {
 
 #playerinput {
     position: fixed;
-    bottom: 25px;
-    left: 10px;
+    top: 78px;
+    left: 15px;
 }
 
-#playerinput input {
-    width: 135px;
+#import-export {
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+}
+
+input {
+    width: 226.5px;
     padding: 10px;
     background: rgba(0, 0, 0, 0.5);
     color: #fff;
     border: 1px solid rgba(0, 0, 0, 0.8);
 }
 
-#playerinput input:focus {
-    border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-#playerinput input:disabled {
+input:disabled {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(0, 0, 0, 0.4);
     color: rgba(255, 255, 255, 0.5);
     user-select: none;
 }
 
-#playerinput input:disabled:hover {
+input:disabled:hover {
     cursor: not-allowed;
     user-select: none;
 }
 
-#server-tools {
-    position: fixed;
-    top: 55px;
-    left: 5px;
+#export-customize, #import-customize {
+    margin-top: 10px;
+    margin-left: 10px;
 }
 
-#server-tools div {
-    /* No line breaks */
-    display: inline-block;
-    margin-left: 10px;
+.clickable {
     cursor: pointer;
+}
+
+.black {
     color: rgba(0, 0, 0, 0.5);
 }
 
 .tooltip {
     position: relative;
     display: inline-block;
-  }
-  
-  .tooltip .tooltiptext {
+}
+
+.tooltip .tooltiptext {
     visibility: hidden;
-    /*prevent text from going to the next line*/
     white-space: nowrap;
     background: rgba(0, 0, 0, 0.4);
     color: #fff;
     text-align: center;
     border-radius: 6px;
-    padding: 5px 5px;
-    margin-top: 25px;
-  
-    /* Position the tooltip */
+    padding: 5px 5px; 
     position: absolute;
     z-index: 1;
-  }
-  
-  .tooltip:hover .tooltiptext {
+}
+
+.tooltip:hover .tooltiptext {
     visibility: visible;
-  }
+}
+
+#connections {
+    position: fixed;
+    top: 120px;
+    left: 15px;
+    width: 375px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    z-index: 1000;
+    height: 112px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+}
+
+#connections .server {
+    display: inline-block;
+    width: 100%;
+    cursor: pointer;
+}
+
+#connections .server #server-status {
+    float: left;
+}
+
+#connections .server #server-name {
+    margin-left: 25px;
+    float: left;
+}
+
+#connections .server #server-ip {
+    float: right;
+    margin-right: 15px;
+}
+
+#connection-buttons {
+    position: fixed;
+    top: 249px;
+    left: 15px;
+}
+
+#connection-buttons button {
+    min-width: 0;
+    padding: 10px 15px;
+    margin: 0;
+}
+
+#connection-buttons input {
+    width: 175px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    margin: 0;
+    margin-top: 10px;
+}
+
+.server #remove-server {
+    float: right;
+    margin: 0;
+    padding: 2px 8px;
+    min-width: unset;
+}
+
+.selected {
+    outline: 1px solid rgba(255, 255, 255, 0.5);
+}
 
 /* End General Styling */
