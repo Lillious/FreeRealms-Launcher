@@ -301,8 +301,9 @@ class Server {
         // Get server ip from selected server
         const SelectedServer = document.getElementsByClassName('selected')[0];
         if (!SelectedServer) return showToast('error', `Please select a server`);
-        const serverIP = `${SelectedServer.children[3].innerHTML}:20260`
+        const serverIP = `Server=${SelectedServer.children[3].innerHTML}:20260`
         minimize.click();
+        console.log(path.join(__dirname, '../Client/'));
         const process = exec(`${this.client} ${this.args} ${serverIP}`, { cwd: path.join(__dirname, '../Client/') }, (err, stdout, stderr) => {
             if (err) {
                 console.log(err);
