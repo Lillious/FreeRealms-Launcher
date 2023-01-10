@@ -2,10 +2,11 @@ const { ipcRenderer } = require('electron');
 const close = document.getElementById('close');
 const minimize = document.getElementById('minimize');
 const { exec } = require('child_process'); // Import exec function from child_process module
+const util = require('util');
+const execpromise = util.promisify(require('child_process').exec);
 const fs = require('fs'); // Import fs module
 const path = require('path'); // Import path module
 const request = require('request');
-const ping = require('ping');
 const extract = require('extract-zip');
 
 // Check if config.json contains values for FirstName and LastName and set them to the input fields
@@ -434,7 +435,7 @@ document.getElementById('add-server').addEventListener('click', () => {
             servers.classList.remove('selected');
         });
         // add the selected class to the clicked server
-        servers.classList.add('selected');
+        server.classList.add('selected');
     });
     server.classList.add('server');
     const serverStatus = document.createElement('span');
@@ -512,14 +513,27 @@ configJson.ServerList.forEach((server) => {
     parent.appendChild(serverDiv);
 });
 
-setInterval(() => {
-    // Only run if play online is checked
+const ping = async (host, port) => {
+    // Check if powershell is installed on the system
+    const PowerShellVersion = await execpromise('powershell $PSVersionTable');
+    if (PowerShellVersion.stderr) throw new Error(PowerShellVersion.stderr);
+    // Test-NetConnection is a PowerShell command that tests the connection to a host on a specified port.
+    // If the connection is successful, it returns a string that includes 'TcpTestSucceeded : True'
+    const {stdout, stderr} = await execpromise(`powershell Test-NetConnection ${host} -p ${port}`);
+    if (stderr) throw new Error(stderr);
+    // Check if the connection was successful or not and return the result accordingly
+    if (stdout.includes('TcpTestSucceeded : True')) return true;
+    return false;
+}
+CheckConnection();
+
+function CheckConnection () {
     configJson.ServerList.forEach((server) => {
         // Check if server is online
         let servers = document.getElementsByClassName('server');
-        ping.sys.probe(server.IP, (isAlive) => {
-            if (isAlive) {
-                // Find the server in the DOM by ip
+        console.log(`Checking ${server.IP}...`);
+        ping(server.IP, 20260).then((res) => {
+            if (res) {
                 for (let i = 0; i < servers.length; i++) {
                     const serverIP = servers[i].children[3].innerHTML;
                     if (serverIP == server.IP) {
@@ -528,7 +542,6 @@ setInterval(() => {
                     }
                 }
             } else {
-                // Find the server in the DOM by ip
                 for (let i = 0; i < servers.length; i++) {
                     const serverIP = servers[i].children[3].innerHTML;
                     if (serverIP == server.IP) {
@@ -539,4 +552,7 @@ setInterval(() => {
             }
         });
     });
-}, 5000);
+}
+setInterval(() => {
+    CheckConnection();
+}, 20000);
