@@ -1,6 +1,6 @@
 {
   "name": "freerealmslauncher",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A launcher for the Open-Source Free Realms Project.",
   "main": "app.js",
   "type": "commonjs",
