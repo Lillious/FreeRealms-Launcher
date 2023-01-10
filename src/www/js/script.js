@@ -5,8 +5,8 @@ const { exec } = require('child_process'); // Import exec function from child_pr
 const fs = require('fs'); // Import fs module
 const path = require('path'); // Import path module
 const request = require('request');
-const unzipper = require('unzipper');
 const ping = require('ping');
+const extract = require('extract-zip');
 
 // Check if config.json contains values for FirstName and LastName and set them to the input fields
 if (fs.existsSync(path.join(__dirname, '../config.json'))) {
@@ -120,11 +120,13 @@ function getInstallerFile (installerfileURL,installerfilename, name) {
                     total_bytes = parseInt(data.headers['content-length']);
                 })
                 .on('data', function(chunk) {
+                    document.getElementById('install').disabled = true;
                     document.getElementById('toast').innerHTML = `${name} download is currently in progress...`;
                     received_bytes += chunk.length;
                     showDownloadingProgress(received_bytes, total_bytes);
                 })
                 .on('end', function() {
+                    document.getElementById('install').disabled = true;
                     resolve();
                 })
                 .pipe(outStream);
@@ -148,22 +150,8 @@ document.getElementById('install').addEventListener('click', async () => {
     // Download Server files if they don't exist
     if (!fs.existsSync(path.join(__dirname, '../Server/', 'OSFRServer.exe'))) {
         getInstallerFile('https://github.com/cccfire/OpenSourceFreeRealms/releases/download/v1.2/OSFR.Server.zip', path.join(__dirname, '../', 'OSFR.Server.zip'), "Server").then(() => {
-            extractFiles(path.join(__dirname, '../', 'OSFR.Server.zip'), path.join(__dirname, '../')).then(() => {
-                // rename OSFR Server folder to Server
-                fs.rename(path.join(__dirname, '../OSFR Server'), path.join(__dirname, '../Server/'), (err) => {
-                    if (err) {
-                        showToast('error', 'Error renaming OSFR Server folder to Server');
-                    } else {
-                        showToast('success', 'Server installed successfully');
-                        document.getElementById('start-server').disabled = false;
-                    }
-                });
-
-                // Delete OSFR.Server.zip
-                fs.unlink(path.join(__dirname, '../OSFR.Server.zip'), (err) => {
-                    if (err) showToast('error', 'Error deleting OSFR.Server.zip');
-                });
-            });
+            updateToast('Extracting files...', { progressbar: false });
+            extractServer(path.join(__dirname, '../', 'OSFR.Server.zip'), path.join(__dirname, '../'));
         });
     }
 
@@ -171,46 +159,63 @@ document.getElementById('install').addEventListener('click', async () => {
     if (!fs.existsSync(path.join(__dirname, '../Client/', 'FreeRealms.exe'))) {
         updateToast('Client download is currently in progress...', { progressbar: true });
         getInstallerFile('https://github.com/cccfire/OpenSourceFreeRealms/releases/download/v1.2/OSFR.Client.zip', path.join(__dirname, '../', 'Client.zip'), "Client").then(() => {
-            extractFiles(path.join(__dirname, '../', 'Client.zip'), path.join(__dirname, '../')).then(() => {
-                document.getElementById('toast').innerHTML = '';
-                // Rename OSFR Client folder to Client
-                fs.rename(path.join(__dirname, '../OSFR Client'), path.join(__dirname, '../Client/'), (err) => {
-                    if (err) {
-                        showToast('error', 'Error renaming OSFR Client folder to Client');
-                    } else {
-                        showToast('success', 'Client installed successfully');
-                        document.getElementById('play-status').disabled = false;
-                    }
-                });
-
-                // Delete Client.zip
-                fs.unlink(path.join(__dirname, '../Client.zip'), (err) => {
-                    if (err) showToast('error', 'Error deleting Client.zip');
-                  });
-            });
+            updateToast('Extracting files...', { progressbar: false });
+            extractClient(path.join(__dirname, '../', 'Client.zip'), path.join(__dirname, '../'));
         });
     }
 
-    function extractFiles (file, filePath) {
-        return new Promise((resolve, reject) => {
-            fs.createReadStream(file)
-            .pipe(unzipper.Parse())
-            .on('entry', function (entry) {
-                const fileName = entry.path;
-                const type = entry.type; // 'Directory' or 'File'
-                // if type is Directory, create it
-                if (type === 'Directory') {
-                    fs.mkdir(path.join(filePath, fileName), (err) => {
-                        if (err) throw err;
-                    });
-                } else {
-                    document.getElementById('toast').innerHTML = `Extracting ${fileName}...`
-                    entry.pipe(fs.createWriteStream(path.join(filePath, fileName)));
-                }
-            }).on('close', () => {
-                resolve();
-            }); 
+async function extractServer (source, target) {
+    try {
+        await extract(source, { dir: target })
+        // Rename folder to Server
+        fs.rename(path.join(__dirname, '../OSFR Server'), path.join(__dirname, '../Server/'), (err) => {
+            if (err) {
+                updateToast('', { progressbar: false });
+                showToast('error', 'Error renaming OSFR Server folder to Server');
+            } else {
+                updateToast('', { progressbar: false });
+                showToast('success', 'Server installed successfully');
+                document.getElementById('start-server').disabled = false;
+            }
         });
+        fs.unlink(path.join(__dirname, '../', 'OSFR.Server.zip'), (err) => {
+            if (err) {
+                updateToast('', { progressbar: false });
+                showToast('error', 'Error deleting Server.zip');
+            }
+            updateToast('', { progressbar: false });
+        });
+      } catch (err) {
+        updateToast('', { progressbar: false });
+        showToast('error', 'Error extracting Server files');
+      }
+}
+
+async function extractClient (source, target) {  
+    try {
+        await extract(source, { dir: target })
+        // Rename folder to Client
+        fs.rename(path.join(__dirname, '../OSFR Client'), path.join(__dirname, '../Client/'), (err) => {
+            if (err) {
+                updateToast('', { progressbar: false });
+                showToast('error', 'Error renaming OSFR Client folder to Client');
+            } else {
+                updateToast('', { progressbar: false });
+                showToast('success', 'Client installed successfully');
+                document.getElementById('play-status').disabled = false;
+            }
+        });
+        fs.unlink(path.join(__dirname, '../', 'Client.zip'), (err) => {
+            if (err) {
+                updateToast('', { progressbar: false });
+                showToast('error', 'Error deleting Client.zip');
+            }
+            updateToast('', { progressbar: false });
+        });
+      } catch (err) {
+        updateToast('', { progressbar: false });
+        showToast('error', 'Error extracting Client files');
+      }
     }
 }); 
 

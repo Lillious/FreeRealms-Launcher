@@ -16,6 +16,20 @@ if (!fs.existsSync(path.join(__dirname, 'config.json'))) {
         ServerList: [],
     }, null, 4));
 }
+// Read config.json
+const configFile = fs.readFileSync(path.join(__dirname, 'config.json'), 'utf8');
+// Parse config.json
+const data = JSON.parse(configFile);
+// Check if ServerList contains a server by the name of local and an IP address of 127.0.0.1
+if (!data.ServerList.find((server) => server.Name === "Local" && server.IP === '127.0.0.1')) {
+    // If it doesn't, add it
+    data.ServerList.push({
+        Name: "Local",
+        IP: '127.0.0.1',
+    });
+}
+
+fs.writeFileSync(path.join(__dirname, 'config.json'), JSON.stringify(data, null, 4));
 
 // Create GUID
 const charset = () => {
