@@ -391,16 +391,19 @@ input:disabled:hover {
 
 #connections .server #server-status {
     float: left;
+    text-align: left;
 }
 
 #connections .server #server-name {
     margin-left: 25px;
     float: left;
+    text-align: left;
 }
 
 #connections .server #server-ip {
     float: right;
     margin-right: 15px;
+    text-align: right;
 }
 
 #connection-buttons {
@@ -434,6 +437,12 @@ input:disabled:hover {
 
 .selected {
     outline: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+#latency {
+    float: right;
+    margin-right: 15px;
+    text-align: right;
 }
 
 /* End General Styling */

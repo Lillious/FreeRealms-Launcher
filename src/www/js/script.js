@@ -459,8 +459,12 @@ document.getElementById('add-server').addEventListener('click', () => {
     const serverIpSpan = document.createElement('span');
     serverIpSpan.id = 'server-ip';
     serverIpSpan.innerHTML = serverIp;
+    const latency = document.createElement('span');
+    latency.id = 'latency';
+    latency.innerHTML = ' 0ms';
     server.appendChild(serverStatus);
     server.appendChild(serverNameSpan);
+    server.appendChild(latency);
     server.appendChild(serverIpSpan);
     parent.appendChild(server);
     // Add server to config file
@@ -507,8 +511,12 @@ configJson.ServerList.forEach((server) => {
     const serverIp = document.createElement('span');
     serverIp.id = 'server-ip';
     serverIp.innerHTML = server.IP;
+    const latency = document.createElement('span');
+    latency.id = 'latency';
+    latency.innerHTML = ' 0ms';
     serverDiv.appendChild(serverStatus);
     serverDiv.appendChild(serverName);
+    serverDiv.appendChild(latency);
     serverDiv.appendChild(serverIp);
     parent.appendChild(serverDiv);
 });
@@ -519,12 +527,17 @@ const ping = async (host, port) => {
     if (PowerShellVersion.stderr) throw new Error(PowerShellVersion.stderr);
     // Test-NetConnection is a PowerShell command that tests the connection to a host on a specified port.
     // If the connection is successful, it returns a string that includes 'TcpTestSucceeded : True'
-    const {stdout, stderr} = await execpromise(`powershell Test-NetConnection ${host} -p ${port}`);
+    const {stdout, stderr} = await execpromise(`powershell Test-NetConnection ${host}`);
     if (stderr) throw new Error(stderr);
     // Check if the connection was successful or not and return the result accordingly
-    if (stdout.includes('TcpTestSucceeded : True')) return true;
+    // remove spaces and new lines
+    const stdoutSpaceless = stdout.replace(/\s/g, '');
+    // Split from last colon and get the last element
+    const stdoutSplit = stdoutSpaceless.split(':').pop();
+    if (stdoutSpaceless.includes('PingSucceeded:True')) return [true, stdoutSplit];
     return false;
 }
+
 CheckConnection();
 
 function CheckConnection () {
@@ -532,27 +545,47 @@ function CheckConnection () {
         // Check if server is online
         let servers = document.getElementsByClassName('server');
         console.log(`Checking ${server.IP}...`);
-        ping(server.IP, 20260).then((res) => {
-            if (res) {
-                for (let i = 0; i < servers.length; i++) {
-                    const serverIP = servers[i].children[3].innerHTML;
-                    if (serverIP == server.IP) {
-                        servers[i].children[1].innerHTML = 'Online';
-                        servers[i].children[1].style.color = '#2ecc71';
-                    }
-                }
-            } else {
-                for (let i = 0; i < servers.length; i++) {
-                    const serverIP = servers[i].children[3].innerHTML;
-                    if (serverIP == server.IP) {
-                        servers[i].children[1].innerHTML = 'Offline';
-                        servers[i].children[1].style.color = '#e74c3c';
-                    }
+        if (server.IP == '127.0.0.1') {
+            for (let i = 0; i < servers.length; i++) {
+                const serverIP = servers[i].children[4].innerHTML;
+                if (serverIP == server.IP) {
+                    servers[i].children[1].innerHTML = 'Online';
+                    servers[i].children[1].style.color = '#2ecc71';
                 }
             }
-        });
+        } else {
+            ping(server.IP).then((res) => {
+                if (res[0]) {
+                    for (let i = 0; i < servers.length; i++) {
+                        const serverIP = servers[i].children[4].innerHTML;
+                        if (serverIP == server.IP) {
+                            servers[i].children[1].innerHTML = 'Online';
+                            servers[i].children[1].style.color = '#2ecc71';
+                            const latencyValue = servers[i].children[3].innerHTML.replace('ms', '');
+                            if (parseInt(latencyValue) < 50) {
+                                servers[i].children[3].style.color = '#2ecc71';
+                            } else if (parseInt(latencyValue) < 120) {
+                                servers[i].children[3].style.color = '#f4a261';
+                            } else if (parseInt(latencyValue) >= 120) {
+                                servers[i].children[3].style.color = '#e74c3c';
+                            }
+                            servers[i].children[3].innerHTML = res[1];
+                        }
+                    }
+                } else {
+                    for (let i = 0; i < servers.length; i++) {
+                        const serverIP = servers[i].children[4].innerHTML;
+                        if (serverIP == server.IP) {
+                            servers[i].children[1].innerHTML = 'Offline';
+                            servers[i].children[1].style.color = '#e74c3c';
+                            servers[i].children[3].style.color = '#e74c3c';
+                        }
+                    }
+                }
+            });
+        }
     });
 }
 setInterval(() => {
     CheckConnection();
-}, 20000);
+}, 5000);

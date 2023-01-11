@@ -3,7 +3,21 @@ const crash = (err) => { console.error(`\x1b[31m${err}\x1b[0m`); process.exit(1)
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const ws = require('windows-shortcuts');
+const os = require('os')
 process.noAsar = true;
+
+// Check if the shortcut exists
+if (!fs.existsSync(path.join(os.homedir(), "Desktop", "OSFR Launcher.lnk"))) {
+    ws.create(path.join(os.homedir(), "Desktop", "OSFR Launcher.lnk"), {
+        target : path.join(__dirname, "../../FreeRealmsLauncher.exe"),
+        desc : "A Free Realms launcher made by Lillious for the OSFR community",
+        icon : path.join(__dirname, "../../resources/app/src/www/img/icon.ico"),
+        admin : false,
+    }, (err) => {
+        if (err) console.log(err);
+    });
+}
 
 // Check if config.json exists
 if (!fs.existsSync(path.join(__dirname, 'config.json'))) {
