@@ -38,7 +38,7 @@ const updateToast = (message, options) => {
         document.getElementById('progress').style.width = '0%';
         document.getElementById('progress-container').style.display = 'block';
     } else {
-        document.getElementById('install').disabled = false;
+        document.getElementById('install').disabled = true;
         document.getElementById('progress-container').style.display = 'none';
     }
 }
@@ -152,6 +152,7 @@ document.getElementById('install').addEventListener('click', async () => {
     if (!fs.existsSync(path.join(__dirname, '../Server/', 'OSFRServer.exe'))) {
         getInstallerFile('https://github.com/cccfire/OpenSourceFreeRealms/releases/download/v1.2/OSFR.Server.zip', path.join(__dirname, '../', 'OSFR.Server.zip'), "Server").then(() => {
             updateToast('Extracting files...', { progressbar: false });
+            document.getElementById('install').disabled = true;
             extractServer(path.join(__dirname, '../', 'OSFR.Server.zip'), path.join(__dirname, '../'));
         });
     }
@@ -192,7 +193,7 @@ async function extractServer (source, target) {
       }
 }
 
-async function extractClient (source, target) {  
+async function extractClient (source, target) {
     try {
         await extract(source, { dir: target })
         // Rename folder to Client
@@ -302,7 +303,7 @@ class Server {
         // Get server ip from selected server
         const SelectedServer = document.getElementsByClassName('selected')[0];
         if (!SelectedServer) return showToast('error', `Please select a server`);
-        const serverIP = `Server=${SelectedServer.children[3].innerHTML}:20260`
+        const serverIP = `Server=${SelectedServer.children[4].innerHTML}:20260`
         minimize.click();
         console.log(path.join(__dirname, '../Client/'));
         const process = exec(`${this.client} ${this.args} ${serverIP}`, { cwd: path.join(__dirname, '../Client/') }, (err, stdout, stderr) => {
