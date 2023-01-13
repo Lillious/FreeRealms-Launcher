@@ -28,7 +28,6 @@ minimize.addEventListener('click', () => {
     ipcRenderer.send('minimize');
 });
 
-// Start Apache and Tomcat
 const startServer = document.getElementById('start-server');
 
 const updateToast = (message, options) => {
@@ -150,17 +149,17 @@ function showDownloadingProgress(received, total) {
 document.getElementById('install').addEventListener('click', async () => {
     // Download Server files if they don't exist
     if (!fs.existsSync(path.join(__dirname, '../Server/', 'OSFRServer.exe'))) {
-        getInstallerFile('https://github.com/cccfire/OpenSourceFreeRealms/releases/download/v1.2/OSFR.Server.zip', path.join(__dirname, '../', 'OSFR.Server.zip'), "Server").then(() => {
+        getInstallerFile('https://files.lilliousnetworks.com/Server.zip', path.join(__dirname, '../', 'Server.zip'), "Server").then(() => {
             updateToast('Extracting files...', { progressbar: false });
             document.getElementById('install').disabled = true;
-            extractServer(path.join(__dirname, '../', 'OSFR.Server.zip'), path.join(__dirname, '../'));
+            extractServer(path.join(__dirname, '../', 'Server.zip'), path.join(__dirname, '../'));
         });
     }
 
     // Download Client files if they don't exist
     if (!fs.existsSync(path.join(__dirname, '../Client/', 'FreeRealms.exe'))) {
         updateToast('Client download is currently in progress...', { progressbar: true });
-        getInstallerFile('https://github.com/cccfire/OpenSourceFreeRealms/releases/download/v1.2/OSFR.Client.zip', path.join(__dirname, '../', 'Client.zip'), "Client").then(() => {
+        getInstallerFile('https://files.lilliousnetworks.com/Client.zip', path.join(__dirname, '../', 'Client.zip'), "Client").then(() => {
             updateToast('Extracting files...', { progressbar: false });
             extractClient(path.join(__dirname, '../', 'Client.zip'), path.join(__dirname, '../'));
         });
@@ -169,18 +168,9 @@ document.getElementById('install').addEventListener('click', async () => {
 async function extractServer (source, target) {
     try {
         await extract(source, { dir: target })
-        // Rename folder to Server
-        fs.rename(path.join(__dirname, '../OSFR Server'), path.join(__dirname, '../Server/'), (err) => {
-            if (err) {
-                updateToast('', { progressbar: false });
-                showToast('error', 'Error renaming OSFR Server folder to Server');
-            } else {
-                updateToast('', { progressbar: false });
-                showToast('success', 'Server installed successfully');
-                document.getElementById('start-server').disabled = false;
-            }
-        });
-        fs.unlink(path.join(__dirname, '../', 'OSFR.Server.zip'), (err) => {
+        showToast('success', 'Server installed successfully');
+        document.getElementById('start-server').disabled = false;
+        fs.unlink(path.join(__dirname, '../', 'Server.zip'), (err) => {
             if (err) {
                 updateToast('', { progressbar: false });
                 showToast('error', 'Error deleting Server.zip');
@@ -196,17 +186,8 @@ async function extractServer (source, target) {
 async function extractClient (source, target) {
     try {
         await extract(source, { dir: target })
-        // Rename folder to Client
-        fs.rename(path.join(__dirname, '../OSFR Client'), path.join(__dirname, '../Client/'), (err) => {
-            if (err) {
-                updateToast('', { progressbar: false });
-                showToast('error', 'Error renaming OSFR Client folder to Client');
-            } else {
-                updateToast('', { progressbar: false });
-                showToast('success', 'Client installed successfully');
-                document.getElementById('play-status').disabled = false;
-            }
-        });
+        showToast('success', 'Client installed successfully');
+        document.getElementById('play-status').disabled = false;
         fs.unlink(path.join(__dirname, '../', 'Client.zip'), (err) => {
             if (err) {
                 updateToast('', { progressbar: false });
@@ -300,13 +281,48 @@ class Server {
     }
 
     Play () {
+        // Disable first and last name input fields
+        document.getElementById('firstname').disabled = true;
+        document.getElementById('lastname').disabled = true;
+        var FirstName = document.getElementById('firstname').value.toString().charAt(0).toUpperCase() + document.getElementById('firstname').value.toString().slice(1).toLowerCase();
+        var LastName = document.getElementById('lastname').value.toString().charAt(0).toUpperCase() + document.getElementById('lastname').value.toString().slice(1).toLowerCase();
+        // Remove spaces
+        FirstName = FirstName.replace(/[^a-zA-Z ]\s/g, "");
+        LastName = LastName.replace(/[^a-zA-Z ]\s/g, "");
+
+        if (FirstName === '') {
+            showToast('error', `First name cannot be empty`);
+            document.getElementById('firstname').disabled = false;
+            document.getElementById('lastname').disabled = false;
+            return;
+        }
+
+        // Check if server config.json is empty
+        const config = fs.readFileSync(path.join(__dirname, '../Server/config.json'), 'utf8');
+        if (config === '') {
+            showToast('error', `Invalid or empty configuration file`);
+            return;
+        }
+        
+        const configPath = fs.readFileSync(path.join(__dirname, '../config.json'), 'utf8');
+        const configJson = JSON.parse(configPath);
+        const packetSendSelfToClient = fs.readFileSync(path.join(__dirname, '../Server/Customize/PacketSendSelfToClient.json'), 'utf8');
+        const packetSendSelfToClientJson = JSON.parse(packetSendSelfToClient);
+        packetSendSelfToClientJson.PlayerGUID = configJson.GUID;
+        packetSendSelfToClientJson.FirstName = FirstName;
+        configJson.FirstName = FirstName;
+        configJson.LastName = LastName || "";
+        packetSendSelfToClientJson.LastName = LastName;
+        fs.writeFileSync(path.join(__dirname, '../config.json'), JSON.stringify(configJson, null, 4));
+        fs.writeFileSync(path.join(__dirname, '../Server/Customize/PacketSendSelfToClient.json'), JSON.stringify(packetSendSelfToClientJson, null, 4));
+
         // Get server ip from selected server
         const SelectedServer = document.getElementsByClassName('selected')[0];
         if (!SelectedServer) return showToast('error', `Please select a server`);
         const serverIP = `Server=${SelectedServer.children[4].innerHTML}:20260`
         minimize.click();
         console.log(path.join(__dirname, '../Client/'));
-        const process = exec(`${this.client} ${this.args} ${serverIP}`, { cwd: path.join(__dirname, '../Client/') }, (err, stdout, stderr) => {
+        const process = exec(`${this.client} ${this.args} ${serverIP} Ticket=${configJson.FirstName}`, { cwd: path.join(__dirname, '../Client/') }, (err, stdout, stderr) => {
             if (err) {
                 console.log(err);
             }
@@ -321,7 +337,7 @@ class Server {
 // read GUID.txt file and get GUID from it and use it in args for FreeRealms.exe
 const configPath = fs.readFileSync(path.join(__dirname, '../config.json'), 'utf8');
 const configJson = JSON.parse(configPath);
-const args = `inifile=ClientConfig.ini Guid=${configJson.GUID} Ticket=DWCq3TMkGwj9ZZt Internationalization:Locale=8 ShowMemberLoadingScreen=0 Country=US key=m80HqsRO9i4PjJSCOasVMg== CasSessionId=Jk6TeiRMc4Ba38NO`
+const args = `inifile=ClientConfig.ini Guid=${configJson.GUID} Internationalization:Locale=8 ShowMemberLoadingScreen=0 Country=US key=m80HqsRO9i4PjJSCOasVMg== CasSessionId=Jk6TeiRMc4Ba38NO`
 const OSFRServer = new Server("FreeRealms.exe", "OSFRServer.exe", args);
 
 startServer.addEventListener('click', () => {

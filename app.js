@@ -7,17 +7,23 @@ const ws = require('windows-shortcuts');
 const os = require('os')
 process.noAsar = true;
 
-// Check if the shortcut exists
-if (!fs.existsSync(path.join(os.homedir(), "Desktop", "OSFR Launcher.lnk"))) {
-    ws.create(path.join(os.homedir(), "Desktop", "OSFR Launcher.lnk"), {
-        target : path.join(__dirname, "../../FreeRealmsLauncher.exe"),
-        desc : "A Free Realms launcher made by Lillious for the OSFR community",
-        icon : path.join(__dirname, "../../resources/app/src/www/img/icon.ico"),
-        admin : false,
-    }, (err) => {
-        if (err) console.log(err);
-    });
+// delete old shortcuts
+try {
+    fs.unlinkSync(path.join(os.homedir(), "Desktop", "OSFR Launcher.lnk"));
+} catch (err) {
+    console.log(err);
 }
+
+// create new shortcut
+ws.create(path.join(os.homedir(), "Desktop", "OSFR Launcher.lnk"), {
+    target : path.join(__dirname, "../../FreeRealmsLauncher.exe"),
+    desc : "A Free Realms launcher made by Lillious for the OSFR community",
+    icon : path.join(__dirname, "../../resources/app/src/www/img/icon.ico"),
+    admin : false,
+}, (err) => {
+    if (err) console.log(err);
+});
+
 
 // Check if config.json exists
 if (!fs.existsSync(path.join(__dirname, 'config.json'))) {
@@ -40,6 +46,14 @@ if (!data.ServerList.find((server) => server.Name === "Local" && server.IP === '
     data.ServerList.push({
         Name: "Local",
         IP: '127.0.0.1',
+    });
+}
+
+if (!data.ServerList.find((server) => server.Name === "Development" && server.IP === '3.220.181.200')) {
+    // If it doesn't, add it
+    data.ServerList.push({
+        Name: "Development",
+        IP: '3.220.181.200',
     });
 }
 
