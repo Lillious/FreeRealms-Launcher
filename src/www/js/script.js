@@ -56,13 +56,6 @@ const exists = {
         return false;
     },
 }
-// client: fs.existsSync(path.join(__dirname, '../Client/')),
-// clientExecutable: fs.existsSync(path.join(__dirname, '../Client/FreeRealms.exe')),
-// server: fs.existsSync(path.join(__dirname, '../Server/')),
-// serverExecutable: fs.existsSync(path.join(__dirname, '../Server/OSFRServer.exe')),
-// config: fs.existsSync(path.join(__dirname, '../config.json')),
-// logs: fs.existsSync(path.join(__dirname, '../log.txt')),
-
 
 // Update first and last name from config.json
 if (exists.config()) {
