@@ -307,12 +307,6 @@ footer {
     left: 15px;
 }
 
-#import-export {
-    position: fixed;
-    bottom: 15px;
-    left: 15px;
-}
-
 input {
     width: 226.5px;
     padding: 10px;
@@ -443,6 +437,7 @@ input:disabled:hover {
     float: right;
     margin-right: 15px;
     text-align: right;
+    color: #ed6a5e;
 }
 
 /* End General Styling */

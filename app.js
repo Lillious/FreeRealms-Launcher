@@ -49,14 +49,6 @@ if (!data.ServerList.find((server) => server.Name === "Local" && server.IP === '
     });
 }
 
-if (!data.ServerList.find((server) => server.Name === "Development" && server.IP === '3.220.181.200')) {
-    // If it doesn't, add it
-    data.ServerList.push({
-        Name: "Development",
-        IP: '3.220.181.200',
-    });
-}
-
 fs.writeFileSync(path.join(__dirname, 'config.json'), JSON.stringify(data, null, 4));
 
 // Create GUID
