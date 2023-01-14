@@ -1,69 +1,66 @@
 <!DOCTYPE html>
 <html lang='en'>
-<head>
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
-    <title></title>
-    <!-- Preload Javascript -->
-    <link rel='preload' href='./www/js/script.js' as='script'>
-    <script defer src='./www/js/script.js'></script>
-
-    <!-- Preload CSS -->
-    <link rel='preload' href='./www/css/style.css' as='style'>
-    <link rel='preload' href='./www/css/icons.css' as='style'>
-    
-    <link rel='stylesheet' href='./www/css/icons.css'>
-    <link rel='stylesheet' href='./www/css/style.css'>
-</head>
-
-<body>
-    <div id='titlebar'>
-        <div class='container'>
+   <head>
+      <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
+      <meta charset='UTF-8'>
+      <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+      <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+      <title></title>
+      <!-- Preload Javascript -->
+      <link rel='preload' href='./www/js/script.js' as='script'>
+      <script defer src='./www/js/script.js'></script>
+      <!-- Preload CSS -->
+      <link rel='preload' href='./www/css/style.css' as='style'>
+      <link rel='preload' href='./www/css/icons.css' as='style'>
+      <link rel='stylesheet' href='./www/css/icons.css'>
+      <link rel='stylesheet' href='./www/css/style.css'>
+   </head>
+   <body>
+      <div id='titlebar'>
+         <div class='container'>
             <img src="./www/img/logo.png" draggable="false" id="logo" alt="OSFR Logo"/>
             <div id='title'>Free Realms Launcher</div>
             <div id='icons'>
-                <button type='button' id='minimize'>🗕</button>
-                <button type='button' id='close'>🗙</button>
+               <button type='button' id='minimize'>🗕</button>
+               <button type='button' id='close'>🗙</button>
             </div>
-        </div>
-    </div>
-    <!-- Page Content -->
-    <div id='content'>
-        <div class='container'>
+         </div>
+      </div>
+      <!-- Page Content -->
+      <div id='content'>
+         <div class='container'>
             <div id="server-tools">
-                <div id="connections"></div>
-                <div id="connection-buttons">
-                    <button id="add-server">Add Server</button>
-                    <input type="text" id="server-name-input" placeholder="Server Name">
-                    <input type="text" id="server-ip-input" placeholder="Server IP">
-                </div>
+               <div id="connections"></div>
+               <div id="connection-buttons">
+                  <button id="add-server">Add Server</button>
+                  <input type="text" id="server-name-input" placeholder="Server Name">
+                  <input type="text" id="server-ip-input" placeholder="Server IP">
+               </div>
             </div>
             <div id="hero-image">
-                <img src="./www/img/hero.png" draggable="false" alt="Free Realms Hero Image"/>
+               <img src="./www/img/hero.png" draggable="false" alt="Free Realms Hero Image"/>
             </div>
             <div id="control-buttons">
-                <button id="install">Install</button>
-                <br>
-                <button id="start-server">Start Server</button>
-                <br>
-                <button id="play-status">Play</button>
+               <button id="install">Install</button>
+               <br>
+               <button id="start-server">Start Server</button>
+               <br>
+               <button id="play-status">Play</button>
             </div>
             <div id="playerinput">
-                <input type="text" autocomplete="false" spellcheck="false" id="firstname" placeholder="First Name">
-                <input type="text" autocomplete="false" spellcheck="false" id="lastname" placeholder="Last Name">
+               <input type="text" autocomplete="false" spellcheck="false" id="firstname" placeholder="First Name">
+               <input type="text" autocomplete="false" spellcheck="false" id="lastname" placeholder="Last Name">
             </div>
             <div id="toast"></div>
             <div id="progress-container">
-                <div id="progress"></div>
+               <div id="progress"></div>
             </div>
             <div id="version">Version: 1.0.7</div>
             <footer>
-                Open Source Free Realms is not affiliated with Sony Online Entertainment LLC or Daybreak Game Company LLC and claims no rights to Free Realms in any way.
-                All images and trademarks are the property of their respective owners.
+               Open Source Free Realms is not affiliated with Sony Online Entertainment LLC or Daybreak Game Company LLC and claims no rights to Free Realms in any way.
+               All images and trademarks are the property of their respective owners.
             </footer>
-        </div>
-    </div>
-</body>
+         </div>
+      </div>
+   </body>
 </html>

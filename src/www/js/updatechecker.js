@@ -1,11 +1,14 @@
-const { ipcRenderer } = require('electron');
+const {
+    ipcRenderer
+} = require('electron');
 const close = document.getElementById('close');
 const minimize = document.getElementById('minimize');
 const fetch = require("node-fetch");
 const fs = require("fs");
-const request = require("request");
 const path = require("path");
-const { exec } = require('child_process'); // Import exec function from child_process module
+const {
+    exec
+} = require('child_process'); // Import exec function from child_process module
 const toast = document.getElementById("toast");
 toast.innerHTML = "Checking for updates...";
 
@@ -25,8 +28,9 @@ const version = require(path.join(__dirname, "../package.json")).version;
 // If it is, show a toast with the update message and a button to download the update
 fetch("https://raw.githubusercontent.com/Lillious/FreeRealms-Launcher/main/package.json", {
     headers: {
-    'Cache-Control': 'no-cache'
-  }}).then((res) => res.json()).then((json) => {
+        'Cache-Control': 'no-cache'
+    }
+}).then((res) => res.json()).then((json) => {
     if (!json.version) return console.error("Failed to check for updates");
     if (json.version > version) {
         toast.innerHTML = `An update is available!<br><span id='update' style="color: #419cff; cursor: pointer;">Download v${json.version}</span><br><br><span id='skip-update' style="color: #419cff; cursor: pointer;">Skip update</span>`;
@@ -40,12 +44,16 @@ fetch("https://raw.githubusercontent.com/Lillious/FreeRealms-Launcher/main/packa
         updateButton.onclick = () => {
             // Delete Server folder if it exists
             if (fs.existsSync(path.join(__dirname, "../../../Server"))) {
-                fs.rmdirSync(path.join(__dirname, "../../../Server"), { recursive: true });
+                fs.rmdirSync(path.join(__dirname, "../../../Server"), {
+                    recursive: true
+                });
             }
 
             // Delete Client folder if it exists
             if (fs.existsSync(path.join(__dirname, "../../../Client"))) {
-                fs.rmdirSync(path.join(__dirname, "../../../Client"), { recursive: true });
+                fs.rmdirSync(path.join(__dirname, "../../../Client"), {
+                    recursive: true
+                });
             }
 
             const updatePath = path.join(__dirname, `../../../update/update.exe`);

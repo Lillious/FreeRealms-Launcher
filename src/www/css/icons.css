@@ -7,23 +7,20 @@
     height: 14px;
     border: 2px solid;
     border-top: 0;
-    box-shadow:
-        -6px -8px 0 -6px,
-        6px -8px 0 -6px
+    box-shadow: -6px -8px 0 -6px, 6px -8px 0 -6px 
 }
-.gg-export::after,
-.gg-export::before {
+.gg-export::after, .gg-export::before {
     content: "";
     display: block;
     box-sizing: border-box;
-    position: absolute
+    position: absolute 
 }
 .gg-export::before {
     background: currentColor;
     width: 2px;
     height: 14px;
     right: 6px;
-    bottom: 5px
+    bottom: 5px 
 }
 .gg-export::after {
     width: 6px;
@@ -32,9 +29,8 @@
     border-top: 2px solid;
     right: 4px;
     bottom: 14px;
-    transform: rotate(45deg)
+    transform: rotate(45deg) 
 }
-
 .gg-import {
     box-sizing: border-box;
     position: relative;
@@ -44,23 +40,20 @@
     height: 14px;
     border: 2px solid;
     border-top: 0;
-    box-shadow:
-        -6px -8px 0 -6px,
-        6px -8px 0 -6px
+    box-shadow: -6px -8px 0 -6px, 6px -8px 0 -6px 
 }
-.gg-import::after,
-.gg-import::before {
+.gg-import::after, .gg-import::before {
     content: "";
     display: block;
     box-sizing: border-box;
-    position: absolute
+    position: absolute 
 }
 .gg-import::before {
     background: currentColor;
     width: 2px;
     height: 14px;
     right: 6px;
-    bottom: 5px
+    bottom: 5px 
 }
 .gg-import::after {
     width: 6px;
@@ -69,5 +62,5 @@
     border-bottom: 2px solid;
     right: 4px;
     bottom: 4px;
-    transform: rotate(45deg)
+    transform: rotate(45deg) 
 }

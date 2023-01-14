@@ -1,5 +1,12 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
-const crash = (err) => { console.error(`\x1b[31m${err}\x1b[0m`); process.exit(1); };
+const {
+    app,
+    BrowserWindow,
+    ipcMain
+} = require('electron');
+const crash = (err) => {
+    console.error(`\x1b[31m${err}\x1b[0m`);
+    process.exit(1);
+};
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
@@ -16,10 +23,10 @@ try {
 
 // create new shortcut
 ws.create(path.join(os.homedir(), "Desktop", "OSFR Launcher.lnk"), {
-    target : path.join(__dirname, "../../FreeRealmsLauncher.exe"),
-    desc : "A Free Realms launcher made by Lillious for the OSFR community",
-    icon : path.join(__dirname, "../../resources/app/src/www/img/icon.ico"),
-    admin : false,
+    target: path.join(__dirname, "../../FreeRealmsLauncher.exe"),
+    desc: "A Free Realms launcher made by Lillious for the OSFR community",
+    icon: path.join(__dirname, "../../resources/app/src/www/img/icon.ico"),
+    admin: false,
 }, (err) => {
     if (err) console.log(err);
 });
@@ -29,12 +36,12 @@ ws.create(path.join(os.homedir(), "Desktop", "OSFR Launcher.lnk"), {
 if (!fs.existsSync(path.join(__dirname, 'config.json'))) {
     // If it doesn't exist, create it
     fs.writeFileSync(path.join(__dirname, 'config.json'),
-    JSON.stringify({
-        GUID: "",
-        FirstName: "",
-        LastName: "",
-        ServerList: [],
-    }, null, 4));
+        JSON.stringify({
+            GUID: "",
+            FirstName: "",
+            LastName: "",
+            ServerList: [],
+        }, null, 4));
 }
 // Read config.json
 const configFile = fs.readFileSync(path.join(__dirname, 'config.json'), 'utf8');
@@ -55,7 +62,7 @@ fs.writeFileSync(path.join(__dirname, 'config.json'), JSON.stringify(data, null,
 const charset = () => {
     const numbers = [];
     for (let i = 0; i < 10; i++) {
-      numbers.push(String.fromCharCode(48 + i))
+        numbers.push(String.fromCharCode(48 + i))
     }
     return numbers;
 }
@@ -64,13 +71,13 @@ const uuid = [];
 
 generateGUID = () => {
     uuid.push('1');
-  for (let i = 0; i < 18; i++){
-    const part1 = crypto.randomBytes(256).readUInt32BE()%charset().length;
-    uuid.push(charset()[part1]);
-  }
+    for (let i = 0; i < 18; i++) {
+        const part1 = crypto.randomBytes(256).readUInt32BE() % charset().length;
+        uuid.push(charset()[part1]);
+    }
     // Change the array to string format
     let result = uuid.toString();
-  
+
     // Clean up the formatting
     result = result.replace(/[, ]+/g, "");
     // return the result
@@ -106,18 +113,22 @@ const createWindow = () => {
         }
     });
     win.loadFile('./src/checkforupdates.html')
-    .catch((err) => { crash(err); });
+        .catch((err) => {
+            crash(err);
+        });
 }
 
 app.whenReady().then(() => {
-    createWindow();
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
-        }
+        createWindow();
+        app.on('activate', () => {
+            if (BrowserWindow.getAllWindows().length === 0) {
+                createWindow();
+            }
+        });
+    })
+    .catch((err) => {
+        crash(err);
     });
-})
-.catch((err) => { crash(err); });
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

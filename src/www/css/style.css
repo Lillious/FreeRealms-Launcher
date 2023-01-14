@@ -1,24 +1,22 @@
 ::-webkit-scrollbar {
-  background: transparent;
-  width: 4px;
-  height: 4px;
+    background: transparent;
+    width: 4px;
+    height: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+    background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: darkgrey;
-  border-radius: 5px;
+    background: darkgrey;
+    border-radius: 5px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  border-radius: 5px;
+    border-radius: 5px;
 }
-
 @font-face {
     font-family: freerealms;
     src: url(../fonts/freerealms.ttf);
 }
-
 body {
     color: #fff;
     font-family: freerealms;
@@ -33,18 +31,15 @@ body {
     user-select: none;
     resize: none;
 }
-
 input {
     outline: none;
 }
-
 button {
     cursor: pointer;
     user-select: none;
     outline: none;
     margin-bottom: 5px;
 }
-
 footer {
     position: fixed;
     bottom: 0;
@@ -55,9 +50,7 @@ footer {
     text-align: center;
     opacity: 0.5;
 }
-
 /* titlebar */
-
 #titlebar {
     position: fixed;
     top: 0;
@@ -68,25 +61,22 @@ footer {
     max-height: 35px;
     background: rgba(24, 29, 84, 0.2);
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    /* Make titlebar draggable */
+   /* Make titlebar draggable */
     -webkit-app-region: drag;
     user-select: none;
 }
-
 #title {
     text-shadow: 1px 1px 2px black;
     font-weight: bold;
 }
-
 /* Titlebar Buttons */
-
 #titlebar #icons button {
-    /* Remove the dragging ability from titlebar buttons */
+   /* Remove the dragging ability from titlebar buttons */
     -webkit-app-region: no-drag;
-    /* Circlular Apple-like button design */
+   /* Circlular Apple-like button design */
     padding: 10px;
     font-size: 12px;
-    /* Button spacing */
+   /* Button spacing */
     margin-left: -5px;
     margin-right: 0px;
     outline: none;
@@ -95,30 +85,27 @@ footer {
     color: #fff;
     background: transparent;
 }
-
 #titlebar #icons {
-    /* Changes the side and order that the titlebar buttons are in */
+   /* Changes the side and order that the titlebar buttons are in */
     position: absolute;
     top: 0;
     right: 0;
-    /* float: left; */
+   /* float: left;
+    */
 }
-
 #titlebar #icons #close:hover {
     background-color: rgba(255, 41, 41, 0.4);
 }
-
 #titlebar #icons #minimize:hover {
     background: rgba(24, 29, 84, 0.4);
 }
-
 #titlebar .container #title {
-    /* Changes the side that the titlebar title is on */
+   /* Changes the side that the titlebar title is on */
     float: left;
     text-indent: 35px;
-    /* float: right; */
+   /* float: right;
+    */
 }
-
 #version {
     position: fixed;
     bottom: 0;
@@ -127,7 +114,6 @@ footer {
     color: #fff;
     padding: 10px;
 }
-
 #logo {
     position: fixed;
     top: 2px;
@@ -136,9 +122,7 @@ footer {
     height: 32px;
 }
 /* End button coloring */
-
 /* Page Content */
-
 #content {
     position: fixed;
     top: 35px;
@@ -147,29 +131,22 @@ footer {
     bottom: 0;
     overflow-y: scroll;
 }
-
 .container {
     padding: 8px;
 }
-
 /* End General Styling */
-
 .text-align-center {
     text-align: center;
 }
-
 .text-align-left {
     text-align: left;
 }
-
 .text-align-right {
     text-align: right;
 }
-
 .float-right {
     float: right;
 }
-
 .float-left {
     float: left;
 }
@@ -177,7 +154,6 @@ footer {
     display: flex;
     justify-content: center;
 }
-
 #progress-container {
     position: fixed;
     display: none;
@@ -188,7 +164,6 @@ footer {
     background: rgba(0, 0, 0, 0.5);
     z-index: 1000;
 }
-
 #progress {
     position: absolute;
     top: 0;
@@ -197,7 +172,6 @@ footer {
     background: rgba(0, 255, 0, 0.3);
     width: 0%;
 }
-
 #progress-text {
     position: absolute;
     top: 0;
@@ -210,7 +184,6 @@ footer {
     text-shadow: 1px 1px 2px black;
     display: none;
 }
-
 #toast {
     position: fixed;
     top: 47px;
@@ -222,15 +195,13 @@ footer {
     color: rgba(255, 255, 255, 1);
     text-shadow: 1px 1px 2px black;
 }
-
 #control-buttons {
-    /* center buttons at the bottom */
+   /* center buttons at the bottom */
     position: fixed;
     top: 120px;
     left: 416px;
     text-align: center;
 }
-
 #server-tools button, #control-buttons button {
     transition: 0.3s;
     padding: 12.1px;
@@ -239,23 +210,19 @@ footer {
     color: #fff;
     border: 1px solid rgba(0, 0, 0, 0.8);
 }
-
 #server-tools button:hover, #control-buttons #install:hover, #control-buttons #play-status:hover, #control-buttons #start-server:hover {
     transition: 0.3s;
     background: rgba(129, 101, 174, 0.3);
     border: 1px solid rgba(129, 101, 174, 0.5);
 }
-
 #server-tools button:disabled, #control-buttons #play-status:disabled, #control-buttons #install:disabled, #control-buttons #uninstall:disabled, #control-buttons #start-server:disabled {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(0, 0, 0, 0.4);
     color: rgba(255, 255, 255, 0.5);
 }
-
 #server-tools button:disabled:hover, #control-buttons #play-status:disabled:hover, #control-buttons #install:disabled:hover, #control-buttons #uninstall:disabled:hover, #control-buttons #start-server:disabled:hover {
     cursor: not-allowed;
 }
-
 #hero-image {
     z-index: -1;
     width: 45%;
@@ -264,30 +231,27 @@ footer {
     right: 0;
     top: 0;
 }
-
 #hero-image img {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
-
 .notification-bar {
     position: fixed;
-    /* display: none; */
+   /* display: none;
+    */
     right: 25px;
     top: 55px;
     background: rgba(0, 0, 0, 0.5);
     border-right: 4px solid #238636;
     height: 35px;
 }
-
 .notification-bar .notification-content {
     color: #c7cfd7;
     padding: 7px;
     margin-right: 25px;
     margin-left: 5px;
 }
-
 .notification-bar .notification-close {
     color: #c7cfd7;
     position: absolute;
@@ -295,18 +259,15 @@ footer {
     right: 5px;
     user-select: none;
 }
-
 .notification-bar .notification-close:hover {
     color: #ed6a5e;
     cursor: pointer;
 }
-
 #playerinput {
     position: fixed;
     top: 78px;
     left: 15px;
 }
-
 input {
     width: 226.5px;
     padding: 10px;
@@ -314,38 +275,31 @@ input {
     color: #fff;
     border: 1px solid rgba(0, 0, 0, 0.8);
 }
-
 input:disabled {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(0, 0, 0, 0.4);
     color: rgba(255, 255, 255, 0.5);
     user-select: none;
 }
-
 input:disabled:hover {
     cursor: not-allowed;
     user-select: none;
 }
-
 #export-customize, #import-customize {
     margin-top: 10px;
     margin-left: 10px;
 }
-
 .clickable {
     cursor: pointer;
 }
-
 .black {
     color: rgba(0, 0, 0, 0.5);
 }
-
 .tooltip {
     position: relative;
     display: inline-block;
     margin-bottom: -5px;
 }
-
 .tooltip .tooltiptext {
     visibility: hidden;
     white-space: nowrap;
@@ -353,16 +307,14 @@ input:disabled:hover {
     color: #fff;
     text-align: center;
     border-radius: 6px;
-    padding: 5px 5px; 
+    padding: 5px 5px;
     position: absolute;
     z-index: 1;
     margin-top: -45px;
 }
-
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
-
 #connections {
     position: fixed;
     top: 120px;
@@ -376,42 +328,35 @@ input:disabled:hover {
     overflow-x: hidden;
     border: 1px solid rgba(0, 0, 0, 0.8);
 }
-
 #connections .server {
     display: inline-block;
     width: 100%;
     cursor: pointer;
 }
-
 #connections .server #server-status {
     float: left;
     text-align: left;
 }
-
 #connections .server #server-name {
     margin-left: 25px;
     float: left;
     text-align: left;
 }
-
 #connections .server #server-ip {
     float: right;
     margin-right: 15px;
     text-align: right;
 }
-
 #connection-buttons {
     position: fixed;
     top: 249px;
     left: 15px;
 }
-
 #connection-buttons button {
     min-width: 0;
     padding: 10px 15px;
     margin: 0;
 }
-
 #connection-buttons input {
     width: 175px;
     padding: 10px;
@@ -421,23 +366,19 @@ input:disabled:hover {
     margin: 0;
     margin-top: 10px;
 }
-
 .server #remove-server {
     float: right;
     margin: 0;
     padding: 2px 8px;
     min-width: unset;
 }
-
 .selected {
     outline: 1px solid rgba(255, 255, 255, 0.5);
 }
-
 #latency {
     float: right;
     margin-right: 15px;
     text-align: right;
     color: #ed6a5e;
 }
-
 /* End General Styling */

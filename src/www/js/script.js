@@ -1,5 +1,9 @@
-const { ipcRenderer } = require('electron');
-const { exec } = require('child_process'); // Import exec function from child_process module
+const {
+    ipcRenderer
+} = require('electron');
+const {
+    exec
+} = require('child_process'); // Import exec function from child_process module
 const util = require('util');
 const execpromise = util.promisify(require('child_process').exec);
 const fs = require('fs');
@@ -27,37 +31,37 @@ const firstName = document.getElementById('firstname');
 const lastName = document.getElementById('lastname');
 
 const exists = {
-    client () {
+    client() {
         if (fs.existsSync(path.join(__dirname, '../Client/'))) return true;
         return false;
     },
-    clientExecutable () {
+    clientExecutable() {
         if (fs.existsSync(path.join(__dirname, '../Client/FreeRealms.exe'))) return true;
         return false;
     },
-    server () {
+    server() {
         if (fs.existsSync(path.join(__dirname, '../Server/'))) return true;
         return false;
     },
-    serverExecutable () {
+    serverExecutable() {
         if (fs.existsSync(path.join(__dirname, '../Server/OSFRServer.exe'))) return true;
         return false;
     },
-    config () {
+    config() {
         if (fs.existsSync(path.join(__dirname, '../config.json'))) return true;
         return false;
     },
-    logs () {
+    logs() {
         if (fs.existsSync(path.join(__dirname, '../log.txt'))) return true;
         return false;
     },
 }
-    // client: fs.existsSync(path.join(__dirname, '../Client/')),
-    // clientExecutable: fs.existsSync(path.join(__dirname, '../Client/FreeRealms.exe')),
-    // server: fs.existsSync(path.join(__dirname, '../Server/')),
-    // serverExecutable: fs.existsSync(path.join(__dirname, '../Server/OSFRServer.exe')),
-    // config: fs.existsSync(path.join(__dirname, '../config.json')),
-    // logs: fs.existsSync(path.join(__dirname, '../log.txt')),
+// client: fs.existsSync(path.join(__dirname, '../Client/')),
+// clientExecutable: fs.existsSync(path.join(__dirname, '../Client/FreeRealms.exe')),
+// server: fs.existsSync(path.join(__dirname, '../Server/')),
+// serverExecutable: fs.existsSync(path.join(__dirname, '../Server/OSFRServer.exe')),
+// config: fs.existsSync(path.join(__dirname, '../config.json')),
+// logs: fs.existsSync(path.join(__dirname, '../log.txt')),
 
 
 // Update first and last name from config.json
@@ -87,7 +91,7 @@ const ProgressBar = {
     hide() {
         progressBarContainer.style.display = 'none';
     },
-    update (value) {
+    update(value) {
         this.show();
         progressBar.style.width = `${value}%`;
         if (value === 100) {
@@ -101,34 +105,34 @@ const ProgressBar = {
 }
 
 const ToastMessage = {
-    update (message) {
+    update(message) {
         toast.innerHTML = message;
     },
-    clear () {
+    clear() {
         toast.innerHTML = '';
     }
 }
 
 const Prevent = {
-    install () {
+    install() {
         install.disabled = true;
     },
-    play () {
+    play() {
         play.disabled = true;
     }
 }
 
 const Allow = {
-    install () {
+    install() {
         install.disabled = false;
     },
-    play () {
+    play() {
         play.disabled = false;
     }
 }
 
 const Notification = {
-    show (mode, message) {
+    show(mode, message) {
         const NotificationContainer = document.createElement('div');
         const NotificationContent = document.createElement('div');
         NotificationContainer.classList.add('notification-bar');
@@ -148,7 +152,7 @@ const Notification = {
             }
         });
     },
-    clear (notification) {
+    clear(notification) {
         setTimeout(() => {
             document.body.removeChild(notification);
         }, 3000);
@@ -156,7 +160,7 @@ const Notification = {
 }
 
 const isRunning = {
-    client () {
+    client() {
         return new Promise((resolve, reject) => {
             exec('tasklist', (err, stdout, stderr) => {
                 if (err) {
@@ -167,7 +171,7 @@ const isRunning = {
             });
         });
     },
-    async server () {
+    async server() {
         return new Promise((resolve, reject) => {
             exec('tasklist', (err, stdout, stderr) => {
                 if (err) {
@@ -181,7 +185,8 @@ const isRunning = {
 }
 
 checkClientStatus();
-function checkClientStatus () {
+
+function checkClientStatus() {
     isRunning.client().then((result) => {
         if (result) {
             play.innerHTML = 'Playing';
@@ -199,7 +204,8 @@ function checkClientStatus () {
 }
 
 checkServerStatus();
-function checkServerStatus () {
+
+function checkServerStatus() {
     isRunning.server().then((result) => {
         if (result) {
             startServer.innerHTML = 'Stop Server';
@@ -222,31 +228,31 @@ if ((exists.client() && exists.clientExecutable()) && (exists.server() && exists
     Allow.install();
 }
 
-function getInstallerFile (installerfileURL,installerfilename, name) {
+function getInstallerFile(installerfileURL, installerfilename, name) {
     var received_bytes = 0;
     var total_bytes = 0;
     var outStream = fs.createWriteStream(installerfilename);
     return new Promise((resolve, reject) => {
         request
             .get(installerfileURL)
-                .on('error', function(err) {
-                    console.log(err);
-                    reject(err);
-                })
-                .on('response', function(data) {
-                    total_bytes = parseInt(data.headers['content-length']);
-                })
-                .on('data', function(chunk) {
-                    Prevent.install();
-                    ToastMessage.update(`${name} download is currently in progress...`);
-                    received_bytes += chunk.length;
-                    showDownloadingProgress(received_bytes, total_bytes);
-                })
-                .on('end', function() {
-                    Prevent.install();
-                    resolve();
-                })
-                .pipe(outStream);
+            .on('error', function(err) {
+                console.log(err);
+                reject(err);
+            })
+            .on('response', function(data) {
+                total_bytes = parseInt(data.headers['content-length']);
+            })
+            .on('data', function(chunk) {
+                Prevent.install();
+                ToastMessage.update(`${name} download is currently in progress...`);
+                received_bytes += chunk.length;
+                showDownloadingProgress(received_bytes, total_bytes);
+            })
+            .on('end', function() {
+                Prevent.install();
+                resolve();
+            })
+            .pipe(outStream);
     })
 };
 
@@ -256,10 +262,12 @@ function showDownloadingProgress(received, total) {
 }
 
 const File = {
-    async extract (type, source, target) {
+    async extract(type, source, target) {
         if (type === 'client') {
             try {
-                await extract(source, { dir: target })
+                await extract(source, {
+                    dir: target
+                })
                 Notification.show('success', 'Client installed successfully');
                 ToastMessage.clear();
                 fs.unlink(path.join(__dirname, '../', 'Client.zip'), (err) => {
@@ -267,15 +275,17 @@ const File = {
                         Notification.show('error', 'Error deleting Client.zip');
                     }
                 });
-              } catch (err) {
+            } catch (err) {
                 Notification.show('error', 'Error extracting Client files');
                 ProgressBar.hide();
                 ToastMessage.clear();
-              }
             }
+        }
         if (type === 'server') {
             try {
-                await extract(source, { dir: target })
+                await extract(source, {
+                    dir: target
+                })
                 Notification.show('success', 'Server installed successfully');
 
                 ToastMessage.clear();
@@ -284,11 +294,11 @@ const File = {
                         Notification.show('error', 'Error deleting Server.zip');
                     }
                 });
-              } catch (err) {
+            } catch (err) {
                 Notification.show('error', 'Error extracting Server files');
                 ProgressBar.hide();
                 ToastMessage.clear();
-              }
+            }
         }
     }
 }
@@ -314,20 +324,21 @@ install.addEventListener('click', async () => {
 });
 
 class OSFRServer {
-    constructor (client, server, args) {
+    constructor(client, server, args) {
         this.client = client;
         this.server = server;
         this.args = args;
     }
-    Start () {
+    Start() {
         const config = fs.readFileSync(path.join(__dirname, '../Server/config.json'), 'utf8');
         if (config === '') {
             startServer.innerHTML = 'Start Server';
             showToast('error', `Invalid configuration file!`);
             return;
         }
-        const process = exec(this.server, { cwd: path.join(__dirname, '../Server/') }, (err, stdout, stderr) => {
-        });
+        const process = exec(this.server, {
+            cwd: path.join(__dirname, '../Server/')
+        }, (err, stdout, stderr) => {});
         process.stderr.on('data', (data) => {
             console.log(data);
         });
@@ -349,7 +360,7 @@ class OSFRServer {
         });
     }
 
-    Stop () {
+    Stop() {
         exec('taskkill /f /im OSFRServer.exe', (err, stdout, stderr) => {
             if (err) {
                 Notification.show('error', `Server stopped`);
@@ -360,7 +371,7 @@ class OSFRServer {
         });
     }
 
-    Play () {
+    Play() {
         const FirstName = document.getElementById('firstname').value.toString().charAt(0).toUpperCase() + document.getElementById('firstname').value.toString().slice(1).toLowerCase().replace(/[^a-zA-Z ]\s/g, "") || '';
         const LastName = document.getElementById('lastname').value.toString().charAt(0).toUpperCase() + document.getElementById('lastname').value.toString().slice(1).toLowerCase().replace(/[^a-zA-Z ]\s/g, "") || '';
         firstName.value = FirstName;
@@ -385,7 +396,9 @@ class OSFRServer {
         const serverIP = `Server=${SelectedServer.children[4].innerHTML}:20260`
         minimize.click();
 
-        const process = exec(`${this.client} ${this.args} ${serverIP} Ticket=${configJson.FirstName}`, { cwd: path.join(__dirname, '../Client/') }, (err, stdout, stderr) => {
+        const process = exec(`${this.client} ${this.args} ${serverIP} Ticket=${configJson.FirstName}`, {
+            cwd: path.join(__dirname, '../Client/')
+        }, (err, stdout, stderr) => {
             if (err) {
                 console.log(err);
             }
@@ -418,7 +431,7 @@ play.addEventListener('click', () => {
 });
 
 const Server = {
-    add (name, ip, setup) {
+    add(name, ip, setup) {
         if (name === "" || ip === "") return Notification.show('error', 'Please enter a valid server name and IP');
         serverName.value = '';
         serverIp.value = '';
@@ -465,17 +478,16 @@ const Server = {
                 Name: name,
                 IP: ip,
             });
-        
+
             if (exists.config()) {
                 fs.writeFileSync(path.join(__dirname, '../config.json'), JSON.stringify(configJson, null, 4));
-            }
-            else {
+            } else {
                 Notification.show('error', `Invalid or empty configuration file`);
                 parent.removeChild(server);
             }
         }
     },
-    remove (name, server, parent) {
+    remove(name, server, parent) {
         configJson.ServerList = configJson.ServerList.filter((_server) => _server.Name !== name);
         fs.writeFileSync(path.join(__dirname, '../config.json'), JSON.stringify(configJson, null, 4));
         parent.removeChild(server);
@@ -490,11 +502,14 @@ configJson.ServerList.forEach((server) => {
     Server.add(server.Name, server.IP, true);
 });
 
-async function ping (host, port) {
+async function ping(host, port) {
     const PowerShellVersion = await execpromise('powershell $PSVersionTable');
     if (PowerShellVersion.stderr) throw new Error(PowerShellVersion.stderr);
     if (port > 65535) return false;
-    const {stdout, stderr} = await execpromise(`powershell Test-NetConnection ${host}`);
+    const {
+        stdout,
+        stderr
+    } = await execpromise(`powershell Test-NetConnection ${host}`);
     if (stderr) throw new Error(stderr);
     const latency = stdout.replace(/\s/g, '').split(':').slice(-1)[0];
     if (stdout.replace(/\s/g, '').includes('PingSucceeded:True')) return [true, latency];
@@ -502,7 +517,7 @@ async function ping (host, port) {
 }
 
 CheckConnection();
-async function CheckConnection () {
+async function CheckConnection() {
     let servers = document.getElementsByClassName('server');
     for (let i = 0; i < configJson.ServerList.length; i++) {
         const server = configJson.ServerList[i];
