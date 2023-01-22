@@ -30,6 +30,7 @@ body {
     background-position: center;
     user-select: none;
     resize: none;
+    overflow: hidden;
 }
 input {
     outline: none;
@@ -372,6 +373,9 @@ input:disabled:hover {
     padding: 2px 8px;
     min-width: unset;
 }
+.server {
+    padding: 2px;
+}
 .selected {
     outline: 1px solid rgba(255, 255, 255, 0.5);
 }
@@ -380,5 +384,12 @@ input:disabled:hover {
     margin-right: 15px;
     text-align: right;
     color: #ed6a5e;
+}
+.server:not(.selected):hover {
+    outline: 1px solid rgba(255, 255, 255, 0.2);
+}
+a {
+    color: rgb(0, 140, 255);
+    text-decoration: none;
 }
 /* End General Styling */

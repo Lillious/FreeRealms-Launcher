@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const request = require('request');
 const extract = require('extract-zip');
+const fetch = require("node-fetch");
 
 // Buttons
 const close = document.getElementById('close');
@@ -29,6 +30,7 @@ const serverName = document.getElementById('server-name-input');
 const serverIp = document.getElementById('server-ip-input');
 const firstName = document.getElementById('firstname');
 const lastName = document.getElementById('lastname');
+        
 
 const exists = {
     client() {
@@ -421,6 +423,12 @@ play.addEventListener('click', () => {
     if (!exists.client()) return Notification.show('error', `Please install the client first!`);
     _OSFRServer.Play();
     Prevent.play();
+    // Check if the client is running after 5 seconds. If it's not, DirectX9 is probably not installed. Show a notification with a link to download it.
+    setTimeout(() => {
+        if (!isRunning('FreeRealms.exe')) {
+            Notification.show('error', `<a href="https://download.microsoft.com/download/1/7/1/1718CCC4-6315-4D8E-9543-8E28A4E18C4C/dxwebsetup.exe" target="">DirextX9</a> is required to play FreeRealms.`);
+        }
+    }, 5000);
 });
 
 const Server = {
@@ -460,7 +468,7 @@ const Server = {
         serverIpSpan.innerHTML = ip;
         const latency = document.createElement('span');
         latency.id = 'latency';
-        latency.innerHTML = ' 0ms';
+        latency.innerHTML = '';
         server.appendChild(serverStatus);
         server.appendChild(serverNameSpan);
         server.appendChild(latency);
@@ -539,7 +547,7 @@ async function CheckConnection() {
                     if (serverIP == server.IP) {
                         servers[i].children[1].innerHTML = 'Offline';
                         servers[i].children[1].style.color = '#ed6a5e';
-                        servers[i].children[3].innerHTML = ' 0ms';
+                        servers[i].children[3].innerHTML = '';
                     }
                 }
             }
@@ -549,6 +557,7 @@ async function CheckConnection() {
                 if (serverIP == server.IP) {
                     servers[i].children[1].innerHTML = 'Localhost';
                     servers[i].children[1].style.color = '#2ecc71';
+                    servers[i].children[3].innerHTML = '';
                 }
             }
         }
@@ -557,3 +566,16 @@ async function CheckConnection() {
         CheckConnection();
     }, 1000);
 }
+
+// Check for updates
+const version = require(path.join(__dirname, '../package.json')).version;
+fetch("https://raw.githubusercontent.com/Lillious/FreeRealms-Launcher/main/package.json", {
+    headers: {
+        'Cache-Control': 'no-cache'
+    }
+}).then((res) => res.json()).then((json) => {
+    if (!json.version) return console.error("Failed to check for updates");
+    if (json.version > version) {
+        Notification.show('info', `<a href="https://github.com/Lillious/FreeRealms-Launcher/releases/download/v${json.version}/FreeRealms.Launcher_v${json.version}.zip" target="">v${json.version}</a> is now available!`);
+    }
+});

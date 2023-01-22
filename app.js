@@ -112,7 +112,7 @@ const createWindow = () => {
             spellcheck: false,
         }
     });
-    win.loadFile('./src/checkforupdates.html')
+    win.loadFile('./src/index.html')
         .catch((err) => {
             crash(err);
         });
