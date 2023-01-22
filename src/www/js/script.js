@@ -434,6 +434,9 @@ play.addEventListener('click', () => {
 const Server = {
     add(name, ip, setup) {
         if (name === "" || ip === "") return Notification.show('error', 'Please enter a valid server name and IP');
+        if (ip.split('.').length !== 4) return Notification.show('error', 'Please enter a valid server IP');
+        if (name.length > 8) return Notification.show('error', 'Server name must be less than 8 characters');
+        if (ip.length > 15) return Notification.show('error', 'Server IP must be less than 15 characters');
         serverName.value = '';
         serverIp.value = '';
         if (!setup) {
