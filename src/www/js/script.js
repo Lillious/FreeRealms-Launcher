@@ -451,6 +451,7 @@ const Server = {
             });
             server.classList.add('selected');
         });
+        if (ip === configJson.ServerList[0].IP) server.classList.add('selected');
         server.classList.add('server');
         const serverStatus = document.createElement('span');
         serverStatus.id = 'server-status';
